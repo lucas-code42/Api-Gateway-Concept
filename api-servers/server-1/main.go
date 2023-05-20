@@ -6,7 +6,7 @@ import (
 
 func main() {
 	r := gin.New()
-	r.GET("/test1", test1)
+	r.GET("/server1", test1)
 	r.Run(":2001") // listen and serve on 0.0.0.0:8080
 }
 

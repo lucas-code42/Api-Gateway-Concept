@@ -13,23 +13,18 @@ import (
 func main() {
 	r := gin.New()
 	r.GET("/test1", test1)
-	r.GET("/test2", test2)
-	r.Run(":8080") // listen and serve on 0.0.0.0:8080
+	r.Run(":2004") // listen and serve on 0.0.0.0:8080
 }
 
 func test1(c *gin.Context) {
-	c.JSON(200, map[string]string{"server1_says": callApi()})
+	response, header := callApi()
+	c.Header("ApiGateWayToken", "API-GATEWAY-TOKEN")
+	c.Header("Server1Token", header)
+	c.JSON(200, map[string]string{"server1_says": response})
 }
 
-func test2(c *gin.Context) {
-	c.JSON(200, map[string]string{"server2_says": callApi()})
-	c.Header("tls", "9999")
-
-}
-
-
-func callApi() string {
-	url := "http://127.0.0.1:8081/api"
+func callApi() (string, string) {
+	url := "http://127.0.0.1:2001/server1"
 	method := "GET"
 
 	client := &http.Client{}
@@ -52,5 +47,6 @@ func callApi() string {
 		log.Fatal(err)
 	}
 
-	return string(body)
+	fmt.Println()
+	return string(body), res.Header["Token"][0]
 }
