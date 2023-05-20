@@ -30,6 +30,7 @@ def do_request(url: str) -> None:
     client_session = session()
     client_request = client_session.get(url)
     print(client_request.text)
+    print(client_request.headers)
     return
 
 

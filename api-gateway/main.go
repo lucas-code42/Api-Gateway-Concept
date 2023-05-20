@@ -5,22 +5,28 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	
 )
 
 func main() {
-
-	fmt.Println("START API-GATEWAY")
-
-	http.HandleFunc("/test1", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(callApi()))
-	})
-
-	http.HandleFunc("/test2", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(callApi()))
-	})
-
-	http.ListenAndServe(":8080", nil)
+	r := gin.New()
+	r.GET("/test1", test1)
+	r.GET("/test2", test2)
+	r.Run(":8080") // listen and serve on 0.0.0.0:8080
 }
+
+func test1(c *gin.Context) {
+	c.JSON(200, map[string]string{"server1_says": callApi()})
+}
+
+func test2(c *gin.Context) {
+	c.JSON(200, map[string]string{"server2_says": callApi()})
+	c.Header("tls", "9999")
+
+}
+
 
 func callApi() string {
 	url := "http://127.0.0.1:8081/api"
@@ -45,6 +51,6 @@ func callApi() string {
 		fmt.Println(err)
 		log.Fatal(err)
 	}
-	
+
 	return string(body)
 }
