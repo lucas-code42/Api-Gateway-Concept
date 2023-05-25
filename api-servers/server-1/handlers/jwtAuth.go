@@ -26,8 +26,8 @@ func generateServerToken() (string, error) {
 	var jwtKey = []byte(config.JWT_KEY)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"ExpiresAt": time.Now().Add(time.Minute * 1).Unix(), // add time minute as .env variable?
-		"Issuer":    config.JWT_ISSUER,
+		"exp": time.Now().Add(time.Second * 20).Unix(), // add time minute as .env variable?
+		"iss":    config.JWT_ISSUER,
 	})
 
 	tokenSrtring, err := token.SignedString(jwtKey)
@@ -59,14 +59,17 @@ func VerifyToken(c *gin.Context) {
 	// ... error handling
 	if err != nil {
 		c.JSON(500, map[string]bool{"auth": false})
+		return
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if claims["Issuer"] == config.JWT_ISSUER {
-			c.JSON(200, map[string]bool{"auth": true})
+		if claims["iss"] == config.JWT_ISSUER {
+			c.JSON(200, map[string]interface{}{"auth": token})
+			return
 		}
 	} else {
 		c.JSON(403, map[string]bool{"auth": false})
+		return
 	}
 
 }
