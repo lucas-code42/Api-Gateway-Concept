@@ -16,7 +16,7 @@ func StartApiEngine() {
 	httpEngine := gin.New()
 	httpEngine.GET(fmt.Sprintf("%s/health", config.DEFAULT_PATH), handlers.HealthCheck)
 	httpEngine.GET(fmt.Sprintf("%s/authenticate", config.DEFAULT_PATH), handlers.DeliveryToken)
-	httpEngine.GET(fmt.Sprintf("%s/checkToken", config.DEFAULT_PATH), handlers.VerifyToken)
+	httpEngine.POST(fmt.Sprintf("%s/checkToken", config.DEFAULT_PATH), handlers.VerifyToken)
 	// apiGateWayHandShake := httpEngine.Group("/")
 
 	// Logging to a file.
