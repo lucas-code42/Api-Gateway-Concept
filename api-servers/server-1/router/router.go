@@ -2,9 +2,7 @@ package router
 
 import (
 	"fmt"
-	"io"
 	"log"
-	"os"
 
 	"github.com/api-server/lcs42/config"
 	"github.com/api-server/lcs42/handlers"
@@ -18,10 +16,6 @@ func StartApiEngine() {
 	httpEngine.GET(fmt.Sprintf("%s/authenticate", config.DEFAULT_PATH), handlers.DeliveryToken)
 	httpEngine.POST(fmt.Sprintf("%s/checkToken", config.DEFAULT_PATH), handlers.VerifyToken)
 	// apiGateWayHandShake := httpEngine.Group("/")
-
-	// Logging to a file.
-	f, _ := os.Create("gin.log")
-	gin.DefaultWriter = io.MultiWriter(f)
 
 	err := httpEngine.Run(fmt.Sprintf(":%s", config.PORT))
 	if err != nil {

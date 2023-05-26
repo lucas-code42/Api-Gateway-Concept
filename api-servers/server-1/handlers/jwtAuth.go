@@ -14,6 +14,7 @@ import (
 
 // DeliveryToken returns a jwt token
 func DeliveryToken(c *gin.Context) {
+
 	jwt, err := generateServerToken()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
@@ -27,7 +28,7 @@ func generateServerToken() (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"exp": time.Now().Add(time.Second * 20).Unix(), // add time minute as .env variable?
-		"iss":    config.JWT_ISSUER,
+		"iss": config.JWT_ISSUER,
 	})
 
 	tokenSrtring, err := token.SignedString(jwtKey)
