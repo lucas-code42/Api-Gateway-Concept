@@ -7,6 +7,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// MountRds return's an instance of interface
 func MountRds() Cache {
 	// consult docker-compose
 	var rds Cache = NewCacheDb(redis.NewClient(&redis.Options{

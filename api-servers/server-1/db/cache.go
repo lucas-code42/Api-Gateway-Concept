@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// Cache interface to execute all methods
 type Cache interface {
 	Get() error
 	GetAll() error
@@ -17,14 +18,17 @@ type Cache interface {
 	CloseRds()
 }
 
+// CacheDB store a Db for redisClient
 type CacheDb struct {
 	Db *redis.Client
 }
 
+// NewCacheDB constructor to CacheDB
 func NewCacheDb(redisClient *redis.Client) *CacheDb {
 	return &CacheDb{Db: redisClient}
 }
 
+// Create method to create a user in rds server
 func (c *CacheDb) Create(user models.User) error {
 	userBuffer, err := utils.ParseToBytes(
 		map[string]string{
@@ -45,22 +49,27 @@ func (c *CacheDb) Create(user models.User) error {
 	return nil
 }
 
+// Get method to geta an user in rds server
 func (c *CacheDb) Get() error {
 	return nil
 }
 
+// GetAll method to getAll data in rds server
 func (c *CacheDb) GetAll() error {
 	return nil
 }
 
+// Delete method to delete an user in rds server
 func (c *CacheDb) Delete() error {
 	return nil
 }
 
+// Update method to update user data in rds server
 func (c *CacheDb) Update() error {
 	return nil
 }
 
+// CloseRds ensure that the connection with rds ends
 func (c *CacheDb) CloseRds() {
 	c.Db.Close()
 }

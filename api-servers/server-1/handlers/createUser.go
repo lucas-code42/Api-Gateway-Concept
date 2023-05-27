@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateUser is a gin handler that will call all methods responsable for create user
 func CreateUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
