@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/api-server/lcs42/config"
-	"github.com/api-server/lcs42/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -27,7 +26,7 @@ func generateServerToken() (string, error) {
 	var jwtKey = []byte(config.JWT_KEY)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": time.Now().Add(time.Second * 20).Unix(), // add time minute as .env variable?
+		"exp": time.Now().Add(time.Second * 40).Unix(), // add time minute as .env variable?
 		"iss": config.JWT_ISSUER,
 	})
 
@@ -41,16 +40,10 @@ func generateServerToken() (string, error) {
 }
 
 // VerifyToken validate if the token still valid
-func VerifyToken(c *gin.Context) {
+func verifyToken(JwtToken string) bool {
 	// ref: https://pkg.go.dev/github.com/golang-jwt/jwt/v5#example-Parse-Hmac
 
-	var requestJwt models.JwtModel
-	if err := c.ShouldBindJSON(&requestJwt); err != nil {
-		c.JSON(403, map[string]bool{"auth": false})
-	}
-
-	token, err := jwt.Parse(requestJwt.Token, func(token *jwt.Token) (interface{}, error) {
-		fmt.Println(token)
+	token, err := jwt.Parse(JwtToken, func(token *jwt.Token) (interface{}, error) {
 		if token.Method.Alg() != "HS256" {
 			return nil, errors.New("invalid")
 		}
@@ -59,20 +52,18 @@ func VerifyToken(c *gin.Context) {
 	})
 	// ... error handling
 	if err != nil {
-		c.JSON(500, map[string]bool{"auth": false})
-		return
+		return false
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if claims["iss"] == config.JWT_ISSUER {
-			c.JSON(200, map[string]interface{}{"auth": token})
-			return
+			return true
 		}
 	} else {
-		c.JSON(403, map[string]bool{"auth": false})
-		return
+		return false
 	}
 
+	return false
 }
 
 // jwt struct
