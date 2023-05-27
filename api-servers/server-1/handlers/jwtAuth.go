@@ -34,7 +34,7 @@ func generateServerToken() (string, error) {
 	tokenSrtring, err := token.SignedString(jwtKey)
 	if err != nil {
 		errMsg := "could not generate server token"
-		fmt.Errorf("%s\nError: %v", errMsg, err)
+		fmt.Printf("%s\nError: %v", errMsg, err)
 		return "", errors.New(errMsg)
 	}
 	return tokenSrtring, nil
