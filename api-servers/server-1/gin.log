@@ -10,9 +10,3 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :2001
-[GIN] 2023/05/26 - 23:42:46 | 200 |      63.551µs |             ::1 | GET      "/server1/health"
-[GIN] 2023/05/26 - 23:43:00 | 200 |      53.561µs |             ::1 | GET      "/server1/authenticate"
-[GIN] 2023/05/26 - 23:43:18 | 500 |     157.782µs |             ::1 | POST     "/server1/checkToken"
-[GIN] 2023/05/26 - 23:43:29 | 500 |     152.577µs |             ::1 | POST     "/server1/checkToken"
-[GIN] 2023/05/26 - 23:43:32 | 200 |      41.013µs |             ::1 | GET      "/server1/authenticate"
-[GIN] 2023/05/26 - 23:43:36 | 200 |     138.733µs |             ::1 | POST     "/server1/checkToken"

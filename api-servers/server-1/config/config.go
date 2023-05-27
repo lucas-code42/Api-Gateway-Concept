@@ -8,10 +8,13 @@ import (
 )
 
 var (
-	PORT         = ""
-	DEFAULT_PATH = ""
-	JWT_KEY      = ""
-	JWT_ISSUER   = ""
+	PORT           = ""
+	DEFAULT_PATH   = ""
+	JWT_KEY        = ""
+	JWT_ISSUER     = ""
+	REDIS_PASSWORD = ""
+	REDIS_HOST     = ""
+	REDIS_PORT     = ""
 )
 
 // LoadConfig loads the .env file
@@ -25,4 +28,7 @@ func LoadConfig() {
 	DEFAULT_PATH = os.Getenv("SERVER_DEFAULT_PATH")
 	JWT_KEY = os.Getenv("JWT_KEY")
 	JWT_ISSUER = os.Getenv("JWT_ISSUER")
+	REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
+	REDIS_HOST = os.Getenv("REDIS_HOST")
+	REDIS_PORT = os.Getenv("REDIS_PORT")
 }

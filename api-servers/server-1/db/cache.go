@@ -1,42 +1,46 @@
 package db
 
 import (
-	"context"
 	"time"
 
 	"github.com/api-server/lcs42/models"
+	"github.com/api-server/lcs42/utils"
 	"github.com/go-redis/redis"
 )
-
-type CacheDb struct {
-	Db  *redis.Client
-	Ctx *context.Context
-}
 
 type Cache interface {
 	Get() error
 	GetAll() error
-	Create() error
+	Create(user models.User) error
 	Update() error
 	Delete() error
+	CloseRds()
 }
 
-func NewCacheDb(redisClient *redis.Client, context *context.Context) *CacheDb {
-	return &CacheDb{Db: redisClient, Ctx: context}
+type CacheDb struct {
+	Db *redis.Client
+}
+
+func NewCacheDb(redisClient *redis.Client) *CacheDb {
+	return &CacheDb{Db: redisClient}
 }
 
 func (c *CacheDb) Create(user models.User) error {
-	err := c.Db.Set(
-		"user",
+	userBuffer, err := utils.ParseToBytes(
 		map[string]string{
 			"userId":   user.Id,
 			"userName": user.Name,
 			"userEmal": user.Email,
 		},
-		time.Duration(time.Minute*10),
 	)
 	if err != nil {
-		return err.Err()
+		return err
+	}
+
+	rdsResponse := c.Db.Set("user", userBuffer, time.Duration(10*time.Minute))
+
+	if rdsResponse.Err() != nil {
+		return rdsResponse.Err()
 	}
 	return nil
 }
@@ -55,4 +59,8 @@ func (c *CacheDb) Delete() error {
 
 func (c *CacheDb) Update() error {
 	return nil
+}
+
+func (c *CacheDb) CloseRds() {
+	c.Db.Close()
 }
