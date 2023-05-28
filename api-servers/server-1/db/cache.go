@@ -41,7 +41,7 @@ func (c *CacheDb) Create(user models.User) error {
 		return err
 	}
 
-	rdsResponse := c.Db.Set("user", userBuffer, time.Duration(10*time.Minute))
+	rdsResponse := c.Db.Set(user.Id, userBuffer, time.Duration(10*time.Minute))
 
 	if rdsResponse.Err() != nil {
 		return rdsResponse.Err()
