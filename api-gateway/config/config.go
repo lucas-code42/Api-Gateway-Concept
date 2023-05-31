@@ -8,10 +8,11 @@ import (
 )
 
 var (
-	PORT                = ""
-	DEFAULT_PATH        = ""
-	APIGATEWAY_JWT_KEY  = ""
-	JWT_ISSUER_SERVER_1 = ""
+	PORT                 = ""
+	SERVER_DEFAULT_PATH  = ""
+	APIGATEWAY_JWT_KEY   = ""
+	JWT_ISSUER_SERVER_1  = ""
+	DEFAULT_HOST_SERVER1 = ""
 )
 
 // LoadConfig loads the .env file
@@ -22,7 +23,8 @@ func LoadConfig() {
 	}
 
 	PORT = os.Getenv("PORT")
-	DEFAULT_PATH = os.Getenv("SERVER_DEFAULT_PATH")
+	SERVER_DEFAULT_PATH = os.Getenv("SERVER_DEFAULT_PATH")
 	APIGATEWAY_JWT_KEY = os.Getenv("APIGATEWAY_JWT_KEY")
 	JWT_ISSUER_SERVER_1 = os.Getenv("JWT_ISSUER_SERVER_1")
+	DEFAULT_HOST_SERVER1 = os.Getenv("DEFAULT_HOST_SERVER1")
 }
