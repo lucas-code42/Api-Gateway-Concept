@@ -7,7 +7,7 @@ import (
 )
 
 func RouteServer1(rg *gin.RouterGroup) {
-	s1 := rg.Group("/health")
-	s1.GET("/", handlersServer1.HealthCheck)
-
+	server1 := rg.Group("/")
+	server1.GET("/health", handlersServer1.HealthCheck)
+	server1.GET("/authenticate", handlersServer1.Authenticate)
 }
