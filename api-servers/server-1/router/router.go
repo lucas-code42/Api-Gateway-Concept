@@ -26,9 +26,10 @@ func StartApiEngine() {
 	httpEngine.GET(fmt.Sprintf("%s/authenticate", config.DEFAULT_PATH), security.DeliveryToken)
 
 	// user
-	httpEngine.POST(fmt.Sprintf("%s/create", config.DEFAULT_PATH), user.CreateUser)
 	httpEngine.GET(fmt.Sprintf("%s/user", config.DEFAULT_PATH), user.GetUser)
-	httpEngine.POST(fmt.Sprintf("%s/update", config.DEFAULT_PATH), user.UpdateUser)
+	httpEngine.POST(fmt.Sprintf("%s/user", config.DEFAULT_PATH), user.CreateUser)
+	httpEngine.PUT(fmt.Sprintf("%s/user", config.DEFAULT_PATH), user.UpdateUser)
+	httpEngine.DELETE(fmt.Sprintf("%s/user", config.DEFAULT_PATH), user.DeleteUser)
 
 	err := httpEngine.Run(fmt.Sprintf(":%s", config.PORT))
 	if err != nil {
