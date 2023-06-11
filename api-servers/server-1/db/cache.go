@@ -11,9 +11,9 @@ import (
 // Cache interface to execute all methods
 type Cache interface {
 	Get(userId string) (models.User, error)
-	Create(user models.User) error
-	Update(newData models.User) error
-	Delete() error
+	Create(user *models.User) error
+	Update(newData *models.User) error
+	Delete(user *models.User) error
 	CloseRds()
 }
 
@@ -28,7 +28,7 @@ func NewCacheDb(redisClient *redis.Client) *CacheDb {
 }
 
 // Create method to create a user in rds server
-func (c *CacheDb) Create(user models.User) error {
+func (c *CacheDb) Create(user *models.User) error {
 	userBuffer, err := utils.ParseToBytes(
 		map[string]string{
 			"id":    user.Id,
@@ -71,12 +71,17 @@ func (c *CacheDb) Get(userId string) (models.User, error) {
 }
 
 // Delete method to delete an user in rds server
-func (c *CacheDb) Delete() error {
+func (c *CacheDb) Delete(user *models.User) error {
+	result := c.Db.Del(user.Id)
+	if result.Err() != nil {
+		return result.Err()
+	}
+
 	return nil
 }
 
 // Update method to update user data in rds server
-func (c *CacheDb) Update(newData models.User) error {
+func (c *CacheDb) Update(newData *models.User) error {
 	if err := c.Create(newData); err != nil {
 		return err
 	}
