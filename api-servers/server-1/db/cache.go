@@ -10,8 +10,7 @@ import (
 
 // Cache interface to execute all methods
 type Cache interface {
-	Get() error
-	GetAll() error
+	Get(userId string) (models.User, error)
 	Create(user models.User) error
 	Update() error
 	Delete() error
@@ -32,16 +31,16 @@ func NewCacheDb(redisClient *redis.Client) *CacheDb {
 func (c *CacheDb) Create(user models.User) error {
 	userBuffer, err := utils.ParseToBytes(
 		map[string]string{
-			"userId":   user.Id,
-			"userName": user.Name,
-			"userEmal": user.Email,
+			"id":    user.Id,
+			"name":  user.Name,
+			"email": user.Email,
 		},
 	)
 	if err != nil {
 		return err
 	}
 
-	rdsResponse := c.Db.Set(user.Id, userBuffer, time.Duration(10*time.Minute))
+	rdsResponse := c.Db.Set(user.Id, userBuffer, time.Duration(30*time.Minute))
 
 	if rdsResponse.Err() != nil {
 		return rdsResponse.Err()
@@ -50,13 +49,25 @@ func (c *CacheDb) Create(user models.User) error {
 }
 
 // Get method to geta an user in rds server
-func (c *CacheDb) Get() error {
-	return nil
-}
+func (c *CacheDb) Get(userId string) (models.User, error) {
+	var user models.User
 
-// GetAll method to getAll data in rds server
-func (c *CacheDb) GetAll() error {
-	return nil
+	result := c.Db.Get(userId)
+	if result.Err() != nil {
+		return user, result.Err()
+	}
+
+	userBytes, err := result.Bytes()
+	if err != nil {
+		return user, err
+	}
+
+	user, err = utils.ParseToModels(userBytes)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
 
 // Delete method to delete an user in rds server
