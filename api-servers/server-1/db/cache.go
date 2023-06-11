@@ -12,7 +12,7 @@ import (
 type Cache interface {
 	Get(userId string) (models.User, error)
 	Create(user models.User) error
-	Update(newData models.User) (models.User, error)
+	Update(newData models.User) error
 	Delete() error
 	CloseRds()
 }
@@ -76,12 +76,12 @@ func (c *CacheDb) Delete() error {
 }
 
 // Update method to update user data in rds server
-func (c *CacheDb) Update(newData models.User) (models.User, error) {
+func (c *CacheDb) Update(newData models.User) error {
 	if err := c.Create(newData); err != nil {
-		return models.User{}, err
+		return err
 	}
 
-	return newData, nil
+	return nil
 }
 
 // CloseRds ensure that the connection with rds ends
