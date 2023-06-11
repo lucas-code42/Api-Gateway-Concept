@@ -11,6 +11,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var JWT_EXP = 30
+
 // DeliveryToken returns a jwt token
 func DeliveryToken(c *gin.Context) {
 
@@ -26,7 +28,7 @@ func generateServerToken() (string, error) {
 	var jwtKey = []byte(config.JWT_KEY)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": time.Now().Add(time.Second * 40).Unix(), // add time minute as .env variable?
+		"exp": time.Now().Add(time.Minute * time.Duration(JWT_EXP)).Unix(),
 		"iss": config.JWT_ISSUER,
 	})
 
