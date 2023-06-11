@@ -13,8 +13,7 @@ import (
 
 // CreateUser is a gin handler that will call all methods responsable for create user
 func CreateUser(c *gin.Context) {
-	securityToken := c.Request.Header.Get("Authorization")
-	if securityToken != config.SECURITY_KEY {
+	if c.Request.Header.Get("Authorization") != config.SECURITY_KEY {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": "unauthorized"})
 		return
 	}
