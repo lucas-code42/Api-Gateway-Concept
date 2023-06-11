@@ -12,16 +12,21 @@ import (
 // StartApiEngine initialize api
 func StartApiEngine() {
 	// gin.SetMode(gin.DebugMode)
-
 	// f, _ := os.Create("gin.log")
 	// gin.DefaultWriter = io.MultiWriter(f)
 
 	httpEngine := gin.Default()
+
+	// health
 	httpEngine.GET(fmt.Sprintf("%s/health", config.DEFAULT_PATH), handlers.HealthCheck)
-	httpEngine.GET(fmt.Sprintf("%s/authenticate", config.DEFAULT_PATH), handlers.DeliveryToken)
-	httpEngine.POST(fmt.Sprintf("%s/create", config.DEFAULT_PATH), handlers.CreateUser)
 	
-	// apiGateWayHandShake := httpEngine.Group("/")
+	// auth
+	httpEngine.GET(fmt.Sprintf("%s/authenticate", config.DEFAULT_PATH), handlers.DeliveryToken)
+	
+	// user
+	httpEngine.POST(fmt.Sprintf("%s/create", config.DEFAULT_PATH), handlers.CreateUser)
+	httpEngine.GET(fmt.Sprintf("%s/user", config.DEFAULT_PATH), handlers.GetUser)
+
 
 	err := httpEngine.Run(fmt.Sprintf(":%s", config.PORT))
 	if err != nil {
