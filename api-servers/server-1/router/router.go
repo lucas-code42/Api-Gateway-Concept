@@ -28,6 +28,7 @@ func StartApiEngine() {
 	// user
 	httpEngine.POST(fmt.Sprintf("%s/create", config.DEFAULT_PATH), user.CreateUser)
 	httpEngine.GET(fmt.Sprintf("%s/user", config.DEFAULT_PATH), user.GetUser)
+	httpEngine.POST(fmt.Sprintf("%s/update", config.DEFAULT_PATH), user.UpdateUser)
 
 	err := httpEngine.Run(fmt.Sprintf(":%s", config.PORT))
 	if err != nil {
