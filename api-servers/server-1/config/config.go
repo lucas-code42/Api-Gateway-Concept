@@ -15,6 +15,7 @@ var (
 	REDIS_PASSWORD = ""
 	REDIS_HOST     = ""
 	REDIS_PORT     = ""
+	SECURITY_KEY   = ""
 )
 
 // LoadConfig loads the .env file
@@ -31,4 +32,5 @@ func LoadConfig() {
 	REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
 	REDIS_HOST = os.Getenv("REDIS_HOST")
 	REDIS_PORT = os.Getenv("REDIS_PORT")
+	SECURITY_KEY = os.Getenv("SECURITY_KEY")
 }
