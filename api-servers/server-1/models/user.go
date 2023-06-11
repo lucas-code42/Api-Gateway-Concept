@@ -6,3 +6,6 @@ type User struct {
 	Name  string `json:"name" binding:"required" redis:"userName"`
 	Email string `json:"email" binding:"required" redis:"userEmail"`
 }
+
+
+// TODO: CREATE METHODS TO VALIDADE ALL FIELDS
