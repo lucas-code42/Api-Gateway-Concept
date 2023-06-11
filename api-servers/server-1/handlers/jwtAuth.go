@@ -15,6 +15,10 @@ var JWT_EXP = 30
 
 // DeliveryToken returns a jwt token
 func DeliveryToken(c *gin.Context) {
+	if c.Request.Header.Get("Authorization") != config.SECURITY_KEY {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": "unauthorized"})
+		return
+	}
 
 	jwt, err := generateServerToken()
 	if err != nil {
