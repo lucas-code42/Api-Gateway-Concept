@@ -4,11 +4,11 @@ from datetime import datetime
 from src.api.settings import Settings
 
 
+
 app = FastAPI(
     description=Settings.API_DESCRIPTION
 )
-
-
+app.include_router()
 
 
 @app.get("/")
