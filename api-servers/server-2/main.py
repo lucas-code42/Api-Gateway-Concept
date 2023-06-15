@@ -2,13 +2,14 @@ from fastapi import FastAPI
 from typing import Dict
 from datetime import datetime
 from src.api.settings import Settings
+from src.api.routers.routes import endpoints
 
 
 
 app = FastAPI(
     description=Settings.API_DESCRIPTION
 )
-app.include_router()
+app.include_router(endpoints)
 
 
 @app.get("/")

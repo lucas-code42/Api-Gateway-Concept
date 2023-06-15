@@ -1,9 +1,10 @@
 from fastapi import APIRouter
-from handlers.book.create import create_book
-from handlers.book.delete import delete_book
-from handlers.book.get_all import get_all_books
-from handlers.book.get import get_book
-from handlers.book.update import update_book
+
+from src.api.routers.handlers.book.create import create_book
+from src.api.routers.handlers.book.delete import delete_book
+from src.api.routers.handlers.book.get_all import get_all_books
+from src.api.routers.handlers.book.get import get_book
+from src.api.routers.handlers.book.update import update_book
 
 
 endpoints = APIRouter()
