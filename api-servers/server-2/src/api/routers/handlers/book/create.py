@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-create_book = APIRouter()
+create = APIRouter()
 
 
-@create_book.post("/")
-async def create():
+@create.post("/")
+async def create_handler():
     return

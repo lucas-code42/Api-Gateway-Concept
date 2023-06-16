@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-update_book = APIRouter()
+update = APIRouter()
 
 
-@update_book.put("/book")
-async def update():
+@update.put("/")
+async def update_handler():
     return

@@ -1,8 +1,13 @@
 from fastapi import APIRouter
 
-get_book = APIRouter()
+get = APIRouter()
 
 
-@get_book.get("/book")
-async def get_book_by_id():
+@get.get("/")
+async def get_book():
+    return
+
+
+@get.get("/all")
+async def get_all():
     return

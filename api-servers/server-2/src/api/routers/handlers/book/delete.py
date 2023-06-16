@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-delete_book = APIRouter()
+delete = APIRouter()
 
 
-@delete_book.delete("/book")
-async def delete_book_by_id():
+@delete.delete("/")
+async def delete_book_by_id_handler():
     return
