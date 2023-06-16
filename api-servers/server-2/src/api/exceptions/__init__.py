@@ -1,0 +1,2 @@
+class ApiFailedLoadEnvs(Exception):
+    pass
