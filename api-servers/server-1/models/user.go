@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"net/mail"
 	"strings"
 	"unicode"
@@ -40,7 +39,6 @@ func (u *User) ValidadeUserStruct(handler string) bool {
 		if err != nil {
 			return false
 		} else {
-			fmt.Println("aqui***")
 			return true
 		}
 
