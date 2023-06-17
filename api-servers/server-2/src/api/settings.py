@@ -16,6 +16,8 @@ class Settings:
     def __init__(self):
         self.__load_envs()
 
+        #TODO ajustar if/else... não ficou muito legal está verboso. KISS
+
         port = self.envs.get("API_PORT")
         if port:
             self.API_PORT: int = int(port)
