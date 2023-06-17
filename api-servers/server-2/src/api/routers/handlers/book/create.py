@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from src.api.exceptions import ApiFailedConnectDataBase
 from src.api.model.books import BooksModels
-from src.db.db import PostgresConnection
+from db.database import PostgresConnection
 from src.db.repository.book import BookRepository
 
 create = APIRouter()
