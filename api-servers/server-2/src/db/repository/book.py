@@ -1,6 +1,6 @@
-
 from src.api.model.books import BooksModels
-from psycopg2.errors import Error
+from src.api.exceptions import ApiFailedToInsertBook
+
 import psycopg2
 
 
@@ -25,8 +25,8 @@ class BookRepository:
 
             if self.cursor.rowcount > 0:
                 result = True
-        except Error as e:
-            print(e)
+        except Exception:
+            raise ApiFailedToInsertBook
         finally:
             if self.cursor:
                 self.cursor.close()
