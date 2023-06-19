@@ -4,7 +4,7 @@ from src.api.exceptions import ApiFailedLoadEnvs
 
 class Settings:
     """api setup"""
-    
+
     API_DESCRIPTION: str = "CRUD-API for management virtual books"
     API_VERSION: str = "0.0.1"
 
@@ -16,7 +16,19 @@ class Settings:
     def __init__(self):
         self.__load_envs()
 
-        #TODO ajustar if/else... não ficou muito legal está verboso. KISS
+        # TODO ajustar if/else... não ficou muito legal está verboso. KISS
+
+        jwt_default_algorithm = self.envs.get("JWT_DEFAULT_ALGORITHM")
+        if jwt_default_algorithm:
+            self.JWT_DEFAULT_ALGORITHM: str = jwt_default_algorithm
+        else:
+            self.JWT_DEFAULT_ALGORITHM: str = ""
+
+        jwt_key = self.envs.get("JWT_KEY")
+        if jwt_key:
+            self.JWT_KEY: str = jwt_key
+        else:
+            self.JWT_KEY: str = ""
 
         port = self.envs.get("API_PORT")
         if port:
