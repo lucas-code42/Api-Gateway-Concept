@@ -6,7 +6,8 @@ from src.api.routers.routes import endpoints
 
 
 app = FastAPI(
-    description=settings.API_DESCRIPTION
+    description=settings.API_DESCRIPTION,
+    version=settings.API_VERSION
 )
 app.include_router(endpoints)
 
