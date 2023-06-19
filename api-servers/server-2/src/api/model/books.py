@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, validator
 
 
 class BooksModels(BaseModel):
@@ -9,25 +9,25 @@ class BooksModels(BaseModel):
     @validator('name')
     def name_validation(cls, value):
         if not value:
-            raise ValidationError("name is empty")
+            raise ValueError("name is empty")
         elif len(value) <= 3:
-            raise ValidationError(
+            raise ValueError(
                 "name is too short, it has to be greater than 3 chars")
         return value.strip()
 
     @validator('price')
     def price_validation(cls, value):
         if value <= 0:
-            raise ValidationError("price value has to be greater than 0")
+            raise ValueError("price value has to be greater than 0")
         if not isinstance(value, float):
-            raise ValidationError("price must to be float instance")
+            raise ValueError("price must to be float instance")
         return value
 
     @validator('author')
     def author_validation(cls, value):
         if not value:
-            raise ValidationError("author is empty")
+            raise ValueError("author is empty")
         elif len(value) <= 3:
-            raise ValidationError(
+            raise ValueError(
                 "author is too short, it has to be greater than 3 chars")
         return value.strip()
