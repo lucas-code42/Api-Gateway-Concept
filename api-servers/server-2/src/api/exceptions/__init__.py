@@ -8,3 +8,7 @@ class ApiFailedConnectDataBase(Exception):
 
 class ApiFailedToInsertBook(Exception):
     pass
+
+
+class ApiFailedToDeleteBook(Exception):
+    pass
