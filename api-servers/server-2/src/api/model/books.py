@@ -1,10 +1,12 @@
 from pydantic import BaseModel, validator
+from typing import Optional
 
 
 class BooksModels(BaseModel):
     name: str
     price: float
     author: str
+    book_id: Optional[int] = None
 
     @validator('name')
     def name_validation(cls, value):
@@ -31,3 +33,10 @@ class BooksModels(BaseModel):
             raise ValueError(
                 "author is too short, it has to be greater than 3 chars")
         return value.strip()
+
+    @validator('book_id')
+    def book_id_validation(cls, value):
+        if value is not None:
+            if value < 0:
+                raise ValueError("id can't be smaller than 0")
+        return value
