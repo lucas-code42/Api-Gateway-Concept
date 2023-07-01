@@ -15,6 +15,8 @@ async def delete_book_by_id_handler(book_id: int):
         pg._connect_db()
         repository = BookRepository(pg.conn)
         if not repository.delete_book_by_id(book_id):
+
+            
             raise ApiFailedToInsertBook
     except ApiFailedConnectDataBase:
         raise HTTPException(
