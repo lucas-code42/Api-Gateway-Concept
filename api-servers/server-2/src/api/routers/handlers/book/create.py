@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+
 
 from src.api.exceptions import ApiFailedConnectDataBase, ApiFailedToInsertBook
 from src.api.model.books import BooksModels
@@ -27,4 +29,4 @@ async def create_handler(book: BooksModels):
     finally:
         if pg.conn is not None:
             pg._close_connection()
-    return JSONResponse(content=book, status_code=201)
+    return JSONResponse(content=jsonable_encoder(book), status_code=201)
