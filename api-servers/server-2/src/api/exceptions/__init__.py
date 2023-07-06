@@ -12,3 +12,8 @@ class ApiFailedToInsertBook(Exception):
 
 class ApiFailedToDeleteBook(Exception):
     pass
+
+
+class ApiFailedToGetBookById(Exception):
+    pass
+
