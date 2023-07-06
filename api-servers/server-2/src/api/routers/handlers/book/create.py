@@ -11,7 +11,7 @@ from src.db.repository.book import BookRepository
 
 create = APIRouter()
 
-
+# TODO RETURN THE BOOK ID THAT WAS CREATED
 @create.post("/", response_model=BooksModels)
 async def create_handler(book: BooksModels):
     pg = None
