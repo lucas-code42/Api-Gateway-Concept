@@ -15,8 +15,6 @@ async def delete_book_by_id_handler(book_id: int):
         pg._connect_db()
         repository = BookRepository(pg.conn)
         if not repository.delete_book_by_id(book_id):
-
-            
             raise ApiFailedToInsertBook
     except ApiFailedConnectDataBase:
         raise HTTPException(
@@ -28,8 +26,3 @@ async def delete_book_by_id_handler(book_id: int):
         if pg.conn is not None:
             pg._close_connection()
     return Response(status_code=204)
-
-
-@delete.delete("/all")
-async def delete_all():
-    return
