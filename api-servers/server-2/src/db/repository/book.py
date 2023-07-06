@@ -1,5 +1,6 @@
 from src.api.model.books import BooksModels
-from src.api.exceptions import ApiFailedToInsertBook, ApiFailedToDeleteBook
+from src.api.exceptions import (
+    ApiFailedToInsertBook, ApiFailedToDeleteBook, ApiFailedToGetBookById)
 import psycopg2
 
 
@@ -32,7 +33,7 @@ class BookRepository:
 
         return result
 
-    def delete_book_by_id(self, book_id: BooksModels) -> bool:
+    def delete_book_by_id(self, book_id: int) -> bool:
         result = False
         try:
             query = """
@@ -50,6 +51,31 @@ class BookRepository:
                 result = True
         except Exception:
             raise ApiFailedToDeleteBook
+        finally:
+            if self.cursor:
+                self.cursor.close()
+        return result
+
+    def get_book_by_id(self, book_id: int) -> (BooksModels | None):
+        result = None
+        try:
+            query = """
+                SELECT * FROM 
+                    books 
+                WHERE 
+                    books.id = %s;
+            """
+            self.cursor.execute(query, (book_id,))
+            self.pg_connection.commit()
+            result_buffer = self.cursor.fetchone()
+            result = BooksModels(
+                book_id=result_buffer[0],
+                name=result_buffer[1],
+                price=result_buffer[2],
+                author=result_buffer[-1]
+            )
+        except Exception:
+            raise ApiFailedToGetBookById
         finally:
             if self.cursor:
                 self.cursor.close()
