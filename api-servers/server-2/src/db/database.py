@@ -15,7 +15,7 @@ class PostgresConnection():
 
         self.conn = Union[None, psycopg2.connect]
 
-    def _connect_db(self):
+    async def _connect_db(self):
         try:
             self.conn = psycopg2.connect(
                 user=self.user,
@@ -28,6 +28,6 @@ class PostgresConnection():
             self.conn = None
             raise ApiFailedConnectDataBase
 
-    def _close_connection(self) -> None:
+    async def _close_connection(self) -> None:
         if self.conn is not None:
             self.conn.close()
