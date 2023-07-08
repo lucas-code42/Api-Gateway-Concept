@@ -17,3 +17,6 @@ class ApiFailedToDeleteBook(Exception):
 class ApiFailedToGetBookById(Exception):
     pass
 
+
+class ApiFaliledToGetAllBooks(Exception):
+    pass
