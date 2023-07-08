@@ -12,9 +12,9 @@ async def delete_book_by_id_handler(book_id: int):
     pg = None
     try:
         pg = PostgresConnection()
-        pg._connect_db()
+        await pg._connect_db()
         repository = BookRepository(pg.conn)
-        if not repository.delete_book_by_id(book_id):
+        if not await repository.delete_book_by_id(book_id):
             raise ApiFailedToInsertBook
     except ApiFailedConnectDataBase:
         raise HTTPException(
@@ -24,5 +24,5 @@ async def delete_book_by_id_handler(book_id: int):
             status_code=500, detail="can't remove from database")
     finally:
         if pg.conn is not None:
-            pg._close_connection()
+            await pg._close_connection()
     return Response(status_code=204)

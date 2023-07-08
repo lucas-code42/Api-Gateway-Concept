@@ -17,9 +17,10 @@ async def create_handler(book: BooksModels):
     pg = None
     try:
         pg = PostgresConnection()
-        pg._connect_db()
+        await pg._connect_db()
         repository = BookRepository(pg.conn)
-        if not repository.create_book(book):
+        book_id = await repository.create_book(book)
+        if not book_id:
             raise ApiFailedToInsertBook
     except ApiFailedConnectDataBase:
         raise HTTPException(
@@ -28,5 +29,5 @@ async def create_handler(book: BooksModels):
         raise HTTPException(status_code=500, detail="can't insert to database")
     finally:
         if pg.conn is not None:
-            pg._close_connection()
+            await pg._close_connection()
     return JSONResponse(content=jsonable_encoder(book), status_code=201)
