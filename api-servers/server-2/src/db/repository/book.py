@@ -2,6 +2,7 @@ from src.api.model.books import BooksModels
 from src.api.exceptions import (
     ApiFailedToInsertBook, ApiFailedToDeleteBook, ApiFailedToGetBookById)
 import psycopg2
+from typing import List, Union
 
 
 class BookRepository:
@@ -9,22 +10,21 @@ class BookRepository:
         self.pg_connection: psycopg2.connection = db_connection
         self.cursor = self.pg_connection.cursor()
 
-    def create_book(self, book: BooksModels) -> bool:
-        result = False
+    async def create_book(self, book: BooksModels) -> Union[int, None]:
+        result = None
         try:
             query = """
                 INSERT INTO 
                     books (name, price, author)
                 VALUES 
-                    (%s, %s,%s)
+                    (%s, %s, %s)
+                RETURNING id
             """
             insert_data = (book.name, book.price, book.author)
-
             self.cursor.execute(query, insert_data)
             self.pg_connection.commit()
-
             if self.cursor.rowcount > 0:
-                result = True
+                result = self.cursor.fetchone()[0]
         except Exception:
             raise ApiFailedToInsertBook
         finally:
@@ -33,7 +33,7 @@ class BookRepository:
 
         return result
 
-    def delete_book_by_id(self, book_id: int) -> bool:
+    async def delete_book_by_id(self, book_id: int) -> bool:
         result = False
         try:
             query = """
@@ -56,7 +56,7 @@ class BookRepository:
                 self.cursor.close()
         return result
 
-    def get_book_by_id(self, book_id: int) -> (BooksModels | None):
+    async def get_book_by_id(self, book_id: int) -> Union[List[BooksModels], None]:
         result = None
         try:
             query = """
@@ -74,6 +74,31 @@ class BookRepository:
                 price=result_buffer[2],
                 author=result_buffer[-1]
             )
+        except Exception:
+            raise ApiFailedToGetBookById
+        finally:
+            if self.cursor:
+                self.cursor.close()
+        return result
+
+    async def get_all_books(self) -> (List[BooksModels] | None):
+        result = []
+        try:
+            query = """
+                SELECT * FROM books
+            """
+            self.cursor.execute(query)
+            self.pg_connection.commit()
+            result_buffer = self.cursor.fetchall()
+            for i in result_buffer:
+                result.append(
+                    BooksModels(
+                        book_id=i[0],
+                        name=i[1],
+                        price=i[2],
+                        author=i[3]
+                    )
+                )
         except Exception:
             raise ApiFailedToGetBookById
         finally:
