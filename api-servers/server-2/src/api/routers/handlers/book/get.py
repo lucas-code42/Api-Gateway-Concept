@@ -1,7 +1,7 @@
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, HTTPException
-from api.exceptions import ApiFailedConnectDataBase, ApiFailedToGetBookById
+from src.api.exceptions import ApiFailedConnectDataBase, ApiFailedToGetBookById, ApiFaliledToGetAllBooks
 from src.db.database import PostgresConnection
 from src.db.repository.book import BookRepository
 
@@ -15,9 +15,9 @@ async def get_book(book_id: int):
     result = None
     try:
         pg = PostgresConnection()
-        pg._connect_db()
+        await pg._connect_db()
         repository = BookRepository(pg.conn)
-        result = repository.get_book_by_id(book_id)
+        result = await repository.get_book_by_id(book_id)
         if result is None:
             raise
     except ApiFailedConnectDataBase:
@@ -27,10 +27,28 @@ async def get_book(book_id: int):
         raise HTTPException(status_code=500, detail="can't get book by id")
     finally:
         if pg.conn is not None:
-            pg._close_connection()
+            await pg._close_connection()
     return JSONResponse(content=jsonable_encoder(result), status_code=200)
 
 
 @get.get("/all")
 async def get_all():
-    return
+    pg = None
+    result = []
+    try:
+        pg = PostgresConnection()
+        await pg._connect_db()
+        reposittory = BookRepository(pg.conn)
+        result = await reposittory.get_all_books()
+        if not result:
+            raise ApiFaliledToGetAllBooks
+    except ApiFailedConnectDataBase:
+        raise HTTPException(
+            status_code=500, detail="can't connect to database")
+    except ApiFaliledToGetAllBooks:
+        raise HTTPException(
+            status_code=500, detail="can't get all books")
+    finally:
+        if pg.conn is not None:
+            await pg._close_connection()
+    return JSONResponse(content=jsonable_encoder(result), status_code=200)
