@@ -1,8 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-
-
 from src.api.exceptions import ApiFailedConnectDataBase, ApiFailedToInsertBook
 from src.api.model.books import BooksModels
 from src.db.database import PostgresConnection
@@ -11,7 +9,7 @@ from src.db.repository.book import BookRepository
 
 create = APIRouter()
 
-# TODO RETURN THE BOOK ID THAT WAS CREATED
+
 @create.post("/", response_model=BooksModels)
 async def create_handler(book: BooksModels):
     pg = None

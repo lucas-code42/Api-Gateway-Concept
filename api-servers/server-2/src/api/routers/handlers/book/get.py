@@ -1,9 +1,15 @@
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, HTTPException
-from src.api.exceptions import ApiFailedConnectDataBase, ApiFailedToGetBookById, ApiFaliledToGetAllBooks
+from src.api.exceptions import (
+    ApiFailedConnectDataBase,
+    ApiFailedToGetBookById,
+    ApiFaliledToGetAllBooks
+)
 from src.db.database import PostgresConnection
 from src.db.repository.book import BookRepository
+from typing import List
+from src.api.model.books import BooksModels
 
 
 get = APIRouter()
@@ -31,7 +37,7 @@ async def get_book(book_id: int):
     return JSONResponse(content=jsonable_encoder(result), status_code=200)
 
 
-@get.get("/all")
+@get.get("/all", response_model=List[BooksModels])
 async def get_all():
     pg = None
     result = []
