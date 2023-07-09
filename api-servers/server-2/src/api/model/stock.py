@@ -1,6 +1,13 @@
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, validator
+import deprecation
+from src.api.settings import settings
 
 
+@deprecation.deprecated(
+    deprecated_in=settings.API_VERSION,
+    removed_in="2023-07-08",
+    details="I gave up doing :)"
+)
 class StockModels(BaseModel):
     books_id: int
     quantity: int
