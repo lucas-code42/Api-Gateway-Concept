@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from typing import Dict
 from datetime import datetime
 from src.api.settings import settings
-from src.api.routers.routes import endpoints
+from src.api.routers.routers import endpoints
 
 
 app = FastAPI(
