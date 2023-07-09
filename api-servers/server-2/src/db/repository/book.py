@@ -1,6 +1,6 @@
 from src.api.model.books import BooksModels
 from src.api.exceptions import (
-    ApiFailedToInsertBook, ApiFailedToDeleteBook, ApiFailedToGetBookById)
+    ApiFailedToInsertBook, ApiFailedToDeleteBook, ApiFailedToGetBookById, ApiFailedToUpdateBooks, ApiFailedToVerifyId)
 import psycopg2
 from typing import List, Union
 
@@ -10,7 +10,7 @@ class BookRepository:
         self.pg_connection: psycopg2.connection = db_connection
         self.cursor = self.pg_connection.cursor()
 
-    async def create_book(self, book: BooksModels) -> Union[int, None]:
+    async def create_book(self, book: BooksModels) -> int:
         result = None
         try:
             query = """
@@ -56,7 +56,7 @@ class BookRepository:
                 self.cursor.close()
         return result
 
-    async def get_book_by_id(self, book_id: int) -> Union[List[BooksModels], None]:
+    async def get_book_by_id(self, book_id: int) -> List[BooksModels]:
         result = None
         try:
             query = """
@@ -81,7 +81,7 @@ class BookRepository:
                 self.cursor.close()
         return result
 
-    async def get_all_books(self) -> (List[BooksModels] | None):
+    async def get_all_books(self) -> List[BooksModels]:
         result = []
         try:
             query = """
@@ -105,3 +105,48 @@ class BookRepository:
             if self.cursor:
                 self.cursor.close()
         return result
+
+    async def verify_id(self, book_id: int) -> Union[int, None]:
+        result = None
+        try:
+            query = """
+                SELECT id FROM 
+                    books
+                WHERE 
+                    id = %s;
+            """
+            self.cursor.execute(query, (str(book_id),))
+            self.pg_connection.commit()
+            buffer_id = self.cursor.fetchone()[0]
+            if buffer_id > 0:
+                result = buffer_id
+        except Exception:
+            raise ApiFailedToVerifyId
+        return result
+
+    async def udpate_book_by_id(self, book: BooksModels) -> BooksModels:
+        try:
+            verified_id = await self.verify_id(book.book_id)
+            if verified_id is not None and book.book_id == verified_id:
+                query = """
+                    UPDATE books
+                    SET
+                        name = %s,
+                        author = %s,
+                        price = %s
+                    WHERE 
+                        id = %s;
+                """
+                self.cursor.execute(
+                    query, (book.name, book.author, book.price, book.book_id))
+                self.pg_connection.commit()
+                if self.cursor.rowcount <= 0:
+                    raise ApiFailedToUpdateBooks
+            else:
+                raise ApiFailedToVerifyId
+        except Exception:
+            raise ApiFailedToUpdateBooks
+        finally:
+            if self.cursor:
+                self.cursor.close()
+        return book

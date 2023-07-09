@@ -20,3 +20,11 @@ class ApiFailedToGetBookById(Exception):
 
 class ApiFaliledToGetAllBooks(Exception):
     pass
+
+
+class ApiFailedToUpdateBooks(Exception):
+    pass
+
+
+class ApiFailedToVerifyId(Exception):
+    pass
