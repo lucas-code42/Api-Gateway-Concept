@@ -10,5 +10,5 @@ class JwtToken(BaseModel):
 
 
 @jwt.get("/", response_model=JwtToken)
-def delivery_token() -> any:
+def delivery_token():
     return JwtToken(**{"token": generate_jwt_token()})
