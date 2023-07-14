@@ -1,13 +1,15 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Depends
 
 from src.db.database import PostgresConnection
 from src.db.repository.book import BookRepository
 from src.api.exceptions import ApiFailedToInsertBook, ApiFailedConnectDataBase
 
+from src.api.security.jwt_token.auth import decode_jwt_token_iss
+
 delete = APIRouter()
 
 
-@delete.delete("/")
+@delete.delete("/", dependencies=[Depends(decode_jwt_token_iss)])
 async def delete_book_by_id_handler(book_id: int):
     pg = None
     try:

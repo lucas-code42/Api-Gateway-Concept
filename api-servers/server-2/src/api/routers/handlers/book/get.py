@@ -1,6 +1,6 @@
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, HTTPException, Depends, Request, Header
+from fastapi import APIRouter, HTTPException, Depends
 from src.api.exceptions import (
     ApiFailedConnectDataBase,
     ApiFailedToGetBookById,
@@ -10,10 +10,8 @@ from src.db.database import PostgresConnection
 from src.db.repository.book import BookRepository
 from typing import List
 from src.api.model.books import BooksModels
-from src.api.security.jwt_token.auth import auth
-from typing import Annotated
+
 from src.api.security.jwt_token.auth import decode_jwt_token_iss
-from typing import Any
 
 
 get = APIRouter()
@@ -43,7 +41,6 @@ async def get_book(book_id: int):
 
 @get.get("/all", response_model=List[BooksModels], dependencies=[Depends(decode_jwt_token_iss)])
 async def get_all():
-    # print(token.headers.get("token"))
     pg = None
     result = []
     try:

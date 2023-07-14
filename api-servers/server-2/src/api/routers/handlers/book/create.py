@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from src.api.exceptions import ApiFailedConnectDataBase, ApiFailedToInsertBook
@@ -6,11 +6,13 @@ from src.api.model.books import BooksModels
 from src.db.database import PostgresConnection
 from src.db.repository.book import BookRepository
 
+from src.api.security.jwt_token.auth import decode_jwt_token_iss
+
 
 create = APIRouter()
 
 
-@create.post("/", response_model=BooksModels)
+@create.post("/", response_model=BooksModels, dependencies=[Depends(decode_jwt_token_iss)])
 async def create_handler(book: BooksModels):
     pg = None
     try:

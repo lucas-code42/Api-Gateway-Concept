@@ -35,14 +35,3 @@ def decode_jwt_token_iss(token: str = Header()) -> bool:
     except ExpiredSignatureError:
         raise ExpiredSignatureError("Expired time")
     return result
-
-def auth():
-    def decorator(func):
-        async def wrapper(*args, **kwargs):
-            authorization = kwargs["authorization"]
-            token = authorization.headers.get("authorization")
-            if decode_jwt_token_iss(token):
-                result = await func(*args, **kwargs)
-                return result
-        return wrapper
-    return decorator
