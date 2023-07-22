@@ -17,7 +17,6 @@ class Settings:
         self.__load_envs()
 
         # TODO ajustar if/else... não ficou muito legal está verboso. KISS
-
         jwt_default_algorithm = self.envs.get("JWT_DEFAULT_ALGORITHM")
         if jwt_default_algorithm:
             self.JWT_DEFAULT_ALGORITHM: str = jwt_default_algorithm
