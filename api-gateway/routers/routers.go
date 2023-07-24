@@ -23,5 +23,5 @@ func Run() {
 
 func mountRoutes() {
 	SERVER_1_ROUTE_GROUP := httpEngine.Group(fmt.Sprintf("%s/server1", config.SERVER_DEFAULT_PATH))
-	server1.RouteServer1(SERVER_1_ROUTE_GROUP)
+	server1.Server1(SERVER_1_ROUTE_GROUP)
 }

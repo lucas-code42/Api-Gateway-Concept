@@ -2,58 +2,55 @@ package handlersServer1
 
 import (
 	"Api-Gateway-lcs42/config"
+	"Api-Gateway-lcs42/models"
 	"Api-Gateway-lcs42/utils"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
-func Authenticate(ctx *gin.Context) {
-	url := fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
+func GetJwt(server string) (*models.AuthJwt, error) {
+	var url string
+
+	switch server {
+	case "server1":
+		url = fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
+	default:
+		// TODO: ajustar para outros servidores (para o 2 por ex)
+		url = fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
+	}
 	method := "GET"
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
+	req.Header.Set("Authorization", config.SERVER1_AUTH_KEY)
 
 	if err != nil {
-		log.Println(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"err": "error"})
-		return
+		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"err": "error"})
-		return
+		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
 	defer res.Body.Close()
+
 	if res.StatusCode != 200 {
-		ctx.JSON(
-			http.StatusServiceUnavailable,
-			gin.H{"err": "the requested service is currently unavailable. Please try again later."},
-		)
-		return
+		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
 
-	var response interface{}
-	response, err = utils.ParseDtoResponse(body)
+	response, err := utils.ParseJwt(body)
 	if err != nil {
-		ctx.JSON(
-			http.StatusServiceUnavailable,
-			gin.H{"err": "the requested service is currently unavailable. Please try again later."},
-		)
-		return
+		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
-
-	ctx.JSON(200, gin.H{"data": response})
+	
+	return response, nil
 }

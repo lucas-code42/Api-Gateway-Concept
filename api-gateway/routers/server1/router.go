@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RouteServer1(rg *gin.RouterGroup) {
+func Server1(rg *gin.RouterGroup) {
 	server1 := rg.Group("/")
 	server1.GET("/health", handlersServer1.HealthCheck)
-	server1.GET("/authenticate", handlersServer1.Authenticate)
+	server1.GET("/createUser", handlersServer1.CreateUser)
 }

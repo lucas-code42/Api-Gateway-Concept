@@ -8,3 +8,7 @@ type DtoResponse struct {
 	StatusCode    int
 	ExecutionTime float64
 }
+
+type AuthJwt struct {
+	Token string `json:"token"`
+}

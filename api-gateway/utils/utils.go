@@ -13,9 +13,16 @@ func ParseDtoResponse(data []byte) (interface{}, error) {
 	return buffer, nil
 }
 
+func ParseJwt(token []byte) (*models.AuthJwt, error) {
+	var buffer models.AuthJwt
+	if err := json.Unmarshal(token, &buffer); err != nil {
+		return &models.AuthJwt{}, err
+	}
+	return &buffer, nil
+}
+
 // TODO: improve the default response
 // think of a way how to use dto model
-
 // func MountResponse(message string, data []interface{}, stausCode int) map[string]any {
 // 	return gin.H{
 // 		"data": models.DtoResponse{

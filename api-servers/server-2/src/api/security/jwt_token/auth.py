@@ -20,7 +20,6 @@ def generate_jwt_token() -> str:
 
 def decode_jwt_token_iss(token: str = Header()) -> bool:
     result = None
-    print(token)
     try:
         # we can pass a list and if one of those are true the decode is successfully
         if decode := jwt.decode(
