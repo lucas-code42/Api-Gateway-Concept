@@ -8,7 +8,7 @@ import (
 func ParseDtoResponse(data []byte) (interface{}, error) {
 	var buffer interface{}
 	if err := json.Unmarshal(data, &buffer); err != nil {
-		return models.DtoResponse{}, err
+		return nil, err
 	}
 	return buffer, nil
 }

@@ -14,7 +14,6 @@ var httpEngine = gin.Default()
 // Run initialize api
 func Run() {
 	mountRoutes()
-
 	err := httpEngine.Run(fmt.Sprintf(":%s", config.PORT))
 	if err != nil {
 		log.Fatal("Could not start APIGATEWAY")
