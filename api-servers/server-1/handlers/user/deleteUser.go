@@ -11,12 +11,17 @@ import (
 )
 
 func DeleteUser(c *gin.Context) {
-	if security.VerifyToken(c.Request.Header.Get("Authorization")) {
+	if !security.VerifyToken(c.Request.Header.Get("Authorization")) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": handlers.UNAUTHORIZED})
 		return
 	}
 
 	user := models.NewUser()
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": handlers.BAD_REQUEST})
+		return
+	}
+
 	if !user.ValidadeUserStruct(models.DELETE_USER) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": handlers.BAD_REQUEST})
 		return
@@ -30,5 +35,5 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"sucess": true})
+	c.JSON(http.StatusAccepted, gin.H{"userDeletd": user.Id})
 }
