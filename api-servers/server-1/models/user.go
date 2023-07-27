@@ -41,12 +41,6 @@ func (u *User) ValidadeUserStruct(handler string) bool {
 		} else {
 			return true
 		}
-
-	case DELETE_USER:
-		_, err := uuid.Parse(u.Id)
-		if err != nil {
-			return false
-		}
 	}
 
 	validAddr, err := mail.ParseAddress(u.Email)

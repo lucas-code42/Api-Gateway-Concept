@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"time"
 
 	"github.com/api-server/lcs42/models"
@@ -13,7 +14,8 @@ type Cache interface {
 	Get(userId string) (models.User, error)
 	Create(user *models.User) error
 	Update(newData *models.User) error
-	Delete(user *models.User) error
+	Delete(userId string) error
+	Exist(id string) error
 	CloseRds()
 }
 
@@ -25,6 +27,15 @@ type CacheDb struct {
 // NewCacheDB constructor to CacheDB
 func NewCacheDb(redisClient *redis.Client) *CacheDb {
 	return &CacheDb{Db: redisClient}
+}
+
+// Exists verify if exists a key
+func (c *CacheDb) Exist(id string) error {
+	r, _ := c.Db.Exists(id).Result()
+	if r < 1 {
+		return errors.New("error")
+	}
+	return nil
 }
 
 // Create method to create a user in rds server
@@ -71,8 +82,8 @@ func (c *CacheDb) Get(userId string) (models.User, error) {
 }
 
 // Delete method to delete an user in rds server
-func (c *CacheDb) Delete(user *models.User) error {
-	result := c.Db.Del(user.Id)
+func (c *CacheDb) Delete(userId string) error {
+	result := c.Db.Del(userId)
 	if result.Err() != nil {
 		return result.Err()
 	}

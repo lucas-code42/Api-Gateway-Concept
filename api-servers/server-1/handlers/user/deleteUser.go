@@ -6,8 +6,8 @@ import (
 	"github.com/api-server/lcs42/db"
 	"github.com/api-server/lcs42/handlers"
 	"github.com/api-server/lcs42/handlers/security"
-	"github.com/api-server/lcs42/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func DeleteUser(c *gin.Context) {
@@ -16,24 +16,24 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	user := models.NewUser()
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": handlers.BAD_REQUEST})
-		return
-	}
-
-	if !user.ValidadeUserStruct(models.DELETE_USER) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": handlers.BAD_REQUEST})
+	userId := c.Query("id")
+	_, err := uuid.Parse(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.BAD_REQUEST})
 		return
 	}
 
 	rds := db.MountRds()
 	defer rds.CloseRds()
+	if rds.Exist(userId) != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.BAD_REQUEST})
+		return
+	}
 
-	if err := rds.Delete(user); err != nil {
+	if err := rds.Delete(userId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.INTERNAL_SERVER_ERROR})
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"userDeletd": user.Id})
+	c.JSON(http.StatusAccepted, gin.H{"userDeletd": userId})
 }
