@@ -16,8 +16,16 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	userId := c.Query("id")
-	_, err := uuid.Parse(userId)
+	type user_id struct {
+		Id string `json:"id"`
+	}
+	var user user_id
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.BAD_REQUEST})
+		return
+	}
+
+	_, err := uuid.Parse(user.Id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.BAD_REQUEST})
 		return
@@ -25,15 +33,15 @@ func DeleteUser(c *gin.Context) {
 
 	rds := db.MountRds()
 	defer rds.CloseRds()
-	if rds.Exist(userId) != nil {
+	if rds.Exist(user.Id) != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.BAD_REQUEST})
 		return
 	}
 
-	if err := rds.Delete(userId); err != nil {
+	if err := rds.Delete(user.Id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": handlers.INTERNAL_SERVER_ERROR})
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"userDeletd": userId})
+	c.JSON(http.StatusAccepted, gin.H{"userDeletd": user})
 }
