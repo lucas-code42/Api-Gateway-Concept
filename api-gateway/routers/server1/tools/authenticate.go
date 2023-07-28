@@ -19,7 +19,7 @@ func GetJwt(server string) (*models.AuthJwt, error) {
 		url = fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
 	default:
 		// TODO: ajustar para outros servidores (para o 2 por ex)
-		url = fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
+		url = ""
 	}
 	method := "GET"
 
