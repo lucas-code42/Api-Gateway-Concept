@@ -3,7 +3,6 @@ package handlers
 import (
 	"Api-Gateway-lcs42/config"
 	"Api-Gateway-lcs42/routers/server1/tools"
-
 	"bytes"
 	"encoding/json"
 
@@ -16,13 +15,14 @@ func CreateUser(ctx *gin.Context) {
 		ctx.JSON(500, gin.H{"err": "deu bosta"})
 		return
 	}
+
 	clientData := new(bytes.Buffer)
 	json.NewEncoder(clientData).Encode(clientJson)
 
-	r, err := tools.RequestServer("POST", config.SERVER1_CREATE_PATH, clientData)
+	r, err := tools.RequestServer("POST", config.SERVER1_PATH, clientData)
 	if err != nil {
 		ctx.JSON(500, gin.H{"err": "deu bosta"})
 		return
 	}
-	ctx.JSON(200, gin.H{"data": r})
+	ctx.JSON(201, gin.H{"data": r})
 }

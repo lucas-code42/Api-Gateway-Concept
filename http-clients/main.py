@@ -1,6 +1,5 @@
 import threading
 from requests import session
-from typing import Dict
 
 
 def do_request(url: str, client_id: int) -> None:
