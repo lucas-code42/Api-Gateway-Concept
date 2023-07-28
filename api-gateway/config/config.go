@@ -14,7 +14,7 @@ var (
 	JWT_ISSUER_SERVER_1  = ""
 	DEFAULT_HOST_SERVER1 = ""
 	SERVER1_AUTH_KEY     = ""
-	SERVER1_CREATE_PATH  = ""
+	SERVER1_PATH         = ""
 )
 
 // LoadConfig loads the .env file
@@ -30,5 +30,5 @@ func LoadConfig() {
 	JWT_ISSUER_SERVER_1 = os.Getenv("JWT_ISSUER_SERVER_1")
 	DEFAULT_HOST_SERVER1 = os.Getenv("DEFAULT_HOST_SERVER1")
 	SERVER1_AUTH_KEY = os.Getenv("SERVER1_AUTH_KEY")
-	SERVER1_CREATE_PATH = os.Getenv("SERVER1_CREATE_PATH")
+	SERVER1_PATH = os.Getenv("SERVER1_PATH")
 }
