@@ -10,4 +10,5 @@ func Server1(rg *gin.RouterGroup) {
 	server1 := rg.Group("/")
 	server1.GET("/health", handlers.HealthCheck)
 	server1.GET("/createUser", handlers.CreateUser)
+	server1.DELETE("/deleteUser", handlers.Deleteuser)
 }
