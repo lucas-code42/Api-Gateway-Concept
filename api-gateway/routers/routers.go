@@ -3,6 +3,7 @@ package routers
 import (
 	"Api-Gateway-lcs42/config"
 	"Api-Gateway-lcs42/routers/server1"
+	"Api-Gateway-lcs42/routers/server2"
 	"fmt"
 	"log"
 
@@ -23,4 +24,7 @@ func Run() {
 func mountRoutes() {
 	SERVER_1_ROUTE_GROUP := httpEngine.Group(fmt.Sprintf("%s/server1", config.SERVER_DEFAULT_PATH))
 	server1.Server1(SERVER_1_ROUTE_GROUP)
+
+	SERVER_2_ROUTE_GROUP := httpEngine.Group(fmt.Sprintf("%s/server2", config.SERVER_DEFAULT_PATH))
+	server2.Server2(SERVER_2_ROUTE_GROUP)
 }
