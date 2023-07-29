@@ -15,6 +15,7 @@ var (
 	DEFAULT_HOST_SERVER1 = ""
 	SERVER1_AUTH_KEY     = ""
 	SERVER1_PATH         = ""
+	DEFAULT_HOST_SERVER2 = ""
 )
 
 // LoadConfig loads the .env file
@@ -27,8 +28,11 @@ func LoadConfig() {
 	PORT = os.Getenv("PORT")
 	SERVER_DEFAULT_PATH = os.Getenv("SERVER_DEFAULT_PATH")
 	APIGATEWAY_JWT_KEY = os.Getenv("APIGATEWAY_JWT_KEY")
+
 	JWT_ISSUER_SERVER_1 = os.Getenv("JWT_ISSUER_SERVER_1")
 	DEFAULT_HOST_SERVER1 = os.Getenv("DEFAULT_HOST_SERVER1")
 	SERVER1_AUTH_KEY = os.Getenv("SERVER1_AUTH_KEY")
 	SERVER1_PATH = os.Getenv("SERVER1_PATH")
+
+	DEFAULT_HOST_SERVER2 = os.Getenv("DEFAULT_HOST_SERVER2")
 }
