@@ -12,13 +12,10 @@ import (
 )
 
 func GetAuthentication() (*models.AuthJwt, error) {
-	url := fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER2)
-	method := "GET"
+	url := fmt.Sprintf("%s/authentication", config.DEFAULT_HOST_SERVER2)
 
 	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	req.Header.Set("Authorization", config.SERVER1_AUTH_KEY)
-
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
@@ -26,6 +23,7 @@ func GetAuthentication() (*models.AuthJwt, error) {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Println(err)
+		fmt.Println(res.StatusCode)
 		return &models.AuthJwt{}, errors.New("error to get jwt")
 	}
 	defer res.Body.Close()
