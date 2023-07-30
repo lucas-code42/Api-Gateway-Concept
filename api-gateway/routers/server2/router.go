@@ -1,8 +1,9 @@
 package server2
 
 import (
-	"github.com/gin-gonic/gin"
 	"Api-Gateway-lcs42/routers/server2/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Server2(rg *gin.RouterGroup) {
