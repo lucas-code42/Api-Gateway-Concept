@@ -16,6 +16,7 @@ var (
 	SERVER1_AUTH_KEY     = ""
 	SERVER1_PATH         = ""
 	DEFAULT_HOST_SERVER2 = ""
+	SERVER2_PATH         = ""
 )
 
 // LoadConfig loads the .env file
@@ -35,4 +36,5 @@ func LoadConfig() {
 	SERVER1_PATH = os.Getenv("SERVER1_PATH")
 
 	DEFAULT_HOST_SERVER2 = os.Getenv("DEFAULT_HOST_SERVER2")
+	SERVER2_PATH = os.Getenv("SERVER2_PATH")
 }
