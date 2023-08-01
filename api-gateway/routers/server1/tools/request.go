@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func RequestServer(method string, path string, payload io.Reader) (models.DtoResponse, error) {
+func RequestServer1(method string, path string, payload io.Reader) (models.DtoResponse, error) {
 	start := time.Now()
 
 	url := fmt.Sprintf("%s/%s", config.DEFAULT_HOST_SERVER1, path)
@@ -23,11 +23,12 @@ func RequestServer(method string, path string, payload io.Reader) (models.DtoRes
 		return models.DtoResponse{}, errors.New("error to mount new request")
 	}
 
-	jwt, err := GetJwt("server1")
+	jwt, err := GetJwt()
 	if err != nil {
 		return models.DtoResponse{}, nil
 	}
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("accept", "application/json")
 	req.Header.Add("Authorization", jwt.Token)
 
 	res, err := client.Do(req)
