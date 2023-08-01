@@ -22,7 +22,7 @@ func Deleteuser(ctx *gin.Context) {
 
 	fmt.Println(clientData)
 
-	r, err := tools.RequestServer("DELETE", config.SERVER1_PATH, clientData)
+	r, err := tools.RequestServer1("DELETE", config.SERVER1_PATH, clientData)
 	if err != nil {
 		ctx.JSON(500, gin.H{"err": "deu bosta no delete user request"})
 		return

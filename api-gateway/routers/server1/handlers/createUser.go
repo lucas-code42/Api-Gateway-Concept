@@ -19,7 +19,7 @@ func CreateUser(ctx *gin.Context) {
 	clientData := new(bytes.Buffer)
 	json.NewEncoder(clientData).Encode(clientJson)
 
-	r, err := tools.RequestServer("POST", config.SERVER1_PATH, clientData)
+	r, err := tools.RequestServer1("POST", config.SERVER1_PATH, clientData)
 	if err != nil {
 		ctx.JSON(500, gin.H{"err": "deu bosta"})
 		return

@@ -11,20 +11,11 @@ import (
 	"net/http"
 )
 
-func GetJwt(server string) (*models.AuthJwt, error) {
-	var url string
-
-	switch server {
-	case "server1":
-		url = fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
-	default:
-		// TODO: ajustar para outros servidores (para o 2 por ex)
-		url = ""
-	}
-	method := "GET"
+func GetJwt() (*models.AuthJwt, error) {
+	url := fmt.Sprintf("%s/authenticate", config.DEFAULT_HOST_SERVER1)
 
 	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", config.SERVER1_AUTH_KEY)
 
 	if err != nil {
