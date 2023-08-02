@@ -14,7 +14,6 @@ import (
 )
 
 func RequestServer1(method string, path string, payload io.Reader) (models.DtoResponse, error) {
-	start := time.Now()
 
 	url := fmt.Sprintf("%s/%s", config.DEFAULT_HOST_SERVER1, path)
 	client := &http.Client{}
