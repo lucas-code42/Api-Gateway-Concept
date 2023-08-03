@@ -57,9 +57,12 @@ func serverGetInterface(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "unknown server"})
 	}
 
-	jwtToken = tools.GetJwt()
+	jwtToken, err := tools.GetJwt(server)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "cannot auth with server"})
+	}
 
-	r, err := tools.GetRequest(url, path)
+	r, err := tools.GetRequest(url, path, jwtToken.Token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 	}

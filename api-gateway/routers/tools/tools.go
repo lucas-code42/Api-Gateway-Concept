@@ -12,20 +12,16 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetRequest(url, path string) (models.DtoResponse, error) {
+func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return models.DtoResponse{}, errors.New("error to mount new request")
 	}
 
-	jwt, err := GetJwt()
-	if err != nil {
-		return models.DtoResponse{}, nil
-	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("accept", "application/json")
-	req.Header.Add("Authorization", jwt.Token)
+	req.Header.Add("Authorization", token)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -55,35 +51,43 @@ func GetRequest(url, path string) (models.DtoResponse, error) {
 	return response, nil
 }
 
-func GetJwt(sevrer, authKey string) (*models.AuthJwt, error) {
-	// TODO: aqui deve conter todas as url's que devolvem um jwt
+func GetJwt(server string) (*models.AuthJwt, error) {
+	var url string
+	var authKey string
+
+	switch server {
+	case "server1":
+		url = "http://127.0.0.1:2001/server1"
+		authKey = config.SERVER1_AUTH_KEY
+	case "server2":
+		url = "http://127.0.0.1:8000"
+	}
+
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", config.SERVER1_AUTH_KEY)
-
+	req.Header.Set("Authorization", authKey)
 	if err != nil {
-		return &models.AuthJwt{}, errors.New("error to get jwt")
+		return &models.AuthJwt{}, errors.New("error to mount jwt request")
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
 		log.Println(err)
-		return &models.AuthJwt{}, errors.New("error to get jwt")
+		return &models.AuthJwt{}, errors.New("request error jwt")
 	}
 	defer res.Body.Close()
-
 	if res.StatusCode != 200 {
-		return &models.AuthJwt{}, errors.New("error to get jwt")
+		return &models.AuthJwt{}, errors.New("server do not respond as expected")
 	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return &models.AuthJwt{}, errors.New("error to get jwt")
+		return &models.AuthJwt{}, errors.New("fail to read server response")
 	}
 
 	response, err := utils.ParseJwt(body)
 	if err != nil {
-		return &models.AuthJwt{}, errors.New("error to get jwt")
+		return &models.AuthJwt{}, errors.New("fail to parse jwt")
 	}
 
 	return response, nil
