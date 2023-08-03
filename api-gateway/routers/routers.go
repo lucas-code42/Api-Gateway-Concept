@@ -2,8 +2,6 @@ package routers
 
 import (
 	"Api-Gateway-lcs42/config"
-	"Api-Gateway-lcs42/routers/server1"
-	"Api-Gateway-lcs42/routers/server2"
 	"Api-Gateway-lcs42/routers/tools"
 	"fmt"
 	"log"
@@ -25,15 +23,6 @@ func Run() {
 }
 
 func mountRoutes() {
-	/*
-		! routers will be replaced
-	*/
-	SERVER_1_ROUTE_GROUP := httpEngine.Group(fmt.Sprintf("%s/server1", config.SERVER_DEFAULT_PATH))
-	server1.Server1(SERVER_1_ROUTE_GROUP)
-
-	SERVER_2_ROUTE_GROUP := httpEngine.Group(fmt.Sprintf("%s/server2", config.SERVER_DEFAULT_PATH))
-	server2.Server2(SERVER_2_ROUTE_GROUP)
-
 	// TODO: modular uma interface padrão que atenda todos os servers...
 	httpEngine.GET(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), serverGetInterface)
 }
