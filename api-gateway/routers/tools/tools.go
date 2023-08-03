@@ -5,6 +5,7 @@ import (
 	"Api-Gateway-lcs42/models"
 	"Api-Gateway-lcs42/utils"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -14,13 +15,14 @@ import (
 
 func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
+	// * temp, the url should be complete at this point
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/all", url, path), nil)
 	if err != nil {
 		return models.DtoResponse{}, errors.New("error to mount new request")
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("accept", "application/json")
+	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", token)
 
 	res, err := client.Do(req)
@@ -55,12 +57,13 @@ func GetJwt(server string) (*models.AuthJwt, error) {
 	var url string
 	var authKey string
 
+	// TODO: add url's .env
 	switch server {
 	case "server1":
 		url = "http://127.0.0.1:2001/server1"
 		authKey = config.SERVER1_AUTH_KEY
 	case "server2":
-		url = "http://127.0.0.1:8000"
+		url = "http://127.0.0.1:8000/authentication"
 	}
 
 	client := &http.Client{}

@@ -23,7 +23,6 @@ func Run() {
 }
 
 func mountRoutes() {
-	// TODO: modular uma interface padrão que atenda todos os servers...
 	httpEngine.GET(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), serverGetInterface)
 }
 
@@ -41,7 +40,7 @@ func serverGetInterface(c *gin.Context) {
 		path = config.DEFAULT_HOST_SERVER1
 	case "server2":
 		url = config.DEFAULT_HOST_SERVER2
-		path = config.DEFAULT_HOST_SERVER2
+		path = "book" // * temp, should be in .env
 	default:
 		c.JSON(http.StatusNotFound, gin.H{"error": "unknown server"})
 	}
