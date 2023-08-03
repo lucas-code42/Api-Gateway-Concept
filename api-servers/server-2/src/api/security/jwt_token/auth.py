@@ -18,12 +18,12 @@ def generate_jwt_token() -> str:
     )
 
 
-def decode_jwt_token_iss(token: str = Header()) -> bool:
+def decode_jwt_token_iss(authorization: str = Header()) -> bool:
     result = None
     try:
         # we can pass a list and if one of those are true the decode is successfully
         if decode := jwt.decode(
-            token,
+            authorization,
             key=settings.JWT_KEY,
             audience=["usr:lcs42", "pythonjwt"],  # use envs...
             algorithms=settings.JWT_DEFAULT_ALGORITHM
