@@ -27,8 +27,8 @@ func mountRoutes() {
 		c.JSON(200, map[string]any{"hello": c.Keys["jwt"]})
 	})
 	
-	httpEngine.GET(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfaceGet)
-	httpEngine.POST(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfacePost)
-	httpEngine.PUT(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfacePut)
-	httpEngine.DELETE(fmt.Sprintf("%s/:serverName/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfaceDelete)
+	httpEngine.GET(fmt.Sprintf("%s/:server/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfaceGet)
+	httpEngine.POST(fmt.Sprintf("%s/:server/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfacePost)
+	httpEngine.PUT(fmt.Sprintf("%s/:server/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfacePut)
+	httpEngine.DELETE(fmt.Sprintf("%s/:server/", config.SERVER_DEFAULT_PATH), handlers.ServerInterfaceDelete)
 }
