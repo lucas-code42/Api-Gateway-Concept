@@ -31,6 +31,10 @@ func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != 200 {
+		return models.DtoResponse{}, fmt.Errorf("server do not respond 200")
+	}
+
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return models.DtoResponse{}, nil
@@ -44,7 +48,7 @@ func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	var buff []interface{}
 	buff = append(buff, data)
 	response := models.DtoResponse{
-		Message:    "msg",
+		Message:    "Sucess",
 		Id:         uuid.NewString(),
 		Data:       buff,
 		StatusCode: 200,
