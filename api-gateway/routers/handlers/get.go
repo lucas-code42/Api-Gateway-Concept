@@ -3,6 +3,7 @@ package handlers
 import (
 	"Api-Gateway-lcs42/config"
 	"Api-Gateway-lcs42/routers/tools"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,12 +12,12 @@ import (
 
 func ServerInterfaceGet(c *gin.Context) {
 	start := time.Now()
-
-	server := c.Param("serverName")
-
+	
+	server := c.Param("server")
+	
 	var url string
 	var path string
-
+	
 	switch server {
 	case "server1":
 		url = config.DEFAULT_HOST_SERVER1
@@ -27,17 +28,12 @@ func ServerInterfaceGet(c *gin.Context) {
 	default:
 		c.JSON(http.StatusNotFound, gin.H{"error": "unknown server"})
 	}
-
-	jwtToken, err := tools.GetJwt(server)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "cannot auth with server"})
-	}
-
-	r, err := tools.GetRequest(url, path, jwtToken.Token)
+	
+	r, err := tools.GetRequest(url, path, fmt.Sprintf("%v", c.Keys["jwt"]))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 	}
+	
 	r.ExecutionTime = time.Duration(time.Since(start).Milliseconds())
-
 	c.JSON(http.StatusOK, gin.H{"data": r})
 }
