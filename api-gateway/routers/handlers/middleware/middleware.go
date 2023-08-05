@@ -10,12 +10,12 @@ import (
 )
 
 func DummyMiddleware() gin.HandlerFunc {
-	if config.APIGATEWAY_JWT_KEY == "" {
+	if config.APIGATEWAY_KEY == "" {
 		log.Fatal("cannot read environment variable")
 	}
 	return func(c *gin.Context) {
 		authKey := c.Request.Header.Get("Authorization")
-		if authKey != config.APIGATEWAY_JWT_KEY {
+		if authKey != config.APIGATEWAY_KEY {
 			respondWithError(c, 500, "deu bosta")
 			return
 		}

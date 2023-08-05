@@ -8,14 +8,16 @@ import (
 )
 
 var (
-	PORT                 = ""
-	SERVER_DEFAULT_PATH  = ""
-	APIGATEWAY_JWT_KEY   = ""
-	JWT_ISSUER_SERVER_1  = ""
-	DEFAULT_HOST_SERVER1 = ""
+	// api gataway
+	PORT                = ""
+	SERVER_DEFAULT_PATH = ""
+	APIGATEWAY_KEY      = ""
+	// server1
+	SERVER1_DEFAULT_HOST = ""
 	SERVER1_AUTH_KEY     = ""
 	SERVER1_PATH         = ""
-	DEFAULT_HOST_SERVER2 = ""
+	// server2
+	SERVER2_DEFAULT_HOST = ""
 	SERVER2_PATH         = ""
 )
 
@@ -26,15 +28,15 @@ func LoadConfig() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// api gataway
 	PORT = os.Getenv("PORT")
 	SERVER_DEFAULT_PATH = os.Getenv("SERVER_DEFAULT_PATH")
-	APIGATEWAY_JWT_KEY = os.Getenv("APIGATEWAY_JWT_KEY")
-
-	JWT_ISSUER_SERVER_1 = os.Getenv("JWT_ISSUER_SERVER_1")
-	DEFAULT_HOST_SERVER1 = os.Getenv("DEFAULT_HOST_SERVER1")
+	APIGATEWAY_KEY = os.Getenv("APIGATEWAY_KEY")
+	// server1
+	SERVER1_DEFAULT_HOST = os.Getenv("SERVER1_DEFAULT_HOST")
 	SERVER1_AUTH_KEY = os.Getenv("SERVER1_AUTH_KEY")
 	SERVER1_PATH = os.Getenv("SERVER1_PATH")
-
-	DEFAULT_HOST_SERVER2 = os.Getenv("DEFAULT_HOST_SERVER2")
+	// server2
+	SERVER2_DEFAULT_HOST = os.Getenv("DEFAULT_HOST_SERVER2")
 	SERVER2_PATH = os.Getenv("SERVER2_PATH")
 }
