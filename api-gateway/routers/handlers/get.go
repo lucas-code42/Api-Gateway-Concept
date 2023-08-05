@@ -20,7 +20,7 @@ type host struct {
 func ServerInterfaceGet(c *gin.Context) {
 	start := time.Now()
 
-	serverHost, err := mountUrl(c)
+	serverHost, err := mountHost(c)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 	}
@@ -34,7 +34,7 @@ func ServerInterfaceGet(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": r})
 }
 
-func mountUrl(c *gin.Context) (host, error) {
+func mountHost(c *gin.Context) (host, error) {
 	var url string
 	var path string
 
