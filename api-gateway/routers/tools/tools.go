@@ -16,7 +16,7 @@ import (
 func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	client := &http.Client{}
 	// * temp, the url should be complete at this point
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/all", url, path), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", url, path), nil)
 	if err != nil {
 		return models.DtoResponse{}, errors.New("error to mount new request")
 	}
@@ -61,13 +61,12 @@ func GetJwt(server string) (*models.AuthJwt, error) {
 	var url string
 	var authKey string
 
-	// TODO: add url's .env
 	switch server {
 	case "server1":
-		url = "http://127.0.0.1:2001/server1"
+		url = config.SERVER1_AUTH_PATH
 		authKey = config.SERVER1_AUTH_KEY
 	case "server2":
-		url = "http://127.0.0.1:8000/authentication"
+		url = config.SERVER2_AUTH_PATH
 	}
 
 	client := &http.Client{}
@@ -76,6 +75,7 @@ func GetJwt(server string) (*models.AuthJwt, error) {
 	if err != nil {
 		return &models.AuthJwt{}, errors.New("error to mount jwt request")
 	}
+	req.Header.Add("Authorization", authKey)
 
 	res, err := client.Do(req)
 	if err != nil {
