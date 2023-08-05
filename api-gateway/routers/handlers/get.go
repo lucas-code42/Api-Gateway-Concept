@@ -12,28 +12,27 @@ import (
 
 func ServerInterfaceGet(c *gin.Context) {
 	start := time.Now()
-	
-	server := c.Param("server")
-	
+
 	var url string
 	var path string
-	
-	switch server {
+
+	s := c.Param("server")
+	switch s {
 	case "server1":
-		url = config.DEFAULT_HOST_SERVER1
-		path = config.DEFAULT_HOST_SERVER1
+		url = config.SERVER1_DEFAULT_HOST
+		path = config.SERVER1_PATH
 	case "server2":
-		url = config.DEFAULT_HOST_SERVER2
-		path = "book" // * temp, should be in .env
+		url = config.SERVER2_DEFAULT_HOST
+		path = config.SERVER2_PATH
 	default:
 		c.JSON(http.StatusNotFound, gin.H{"error": "unknown server"})
 	}
-	
+
 	r, err := tools.GetRequest(url, path, fmt.Sprintf("%v", c.Keys["jwt"]))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 	}
-	
+
 	r.ExecutionTime = time.Duration(time.Since(start).Milliseconds())
 	c.JSON(http.StatusOK, gin.H{"data": r})
 }
