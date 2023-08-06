@@ -9,6 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+	TODO: ADD UM CONTEXTO PARA PEGAR O TEMPO DE PROCESSAMENTO
+*/
+
 func DummyMiddleware() gin.HandlerFunc {
 	if config.APIGATEWAY_KEY == "" {
 		log.Fatal("cannot read environment variable")
@@ -25,12 +29,14 @@ func DummyMiddleware() gin.HandlerFunc {
 			respondWithError(c, 500, fmt.Sprintf("não enviou o serverName ou enviou errado %s", s))
 			return
 		}
+
 		jwt, err := tools.GetJwt(s)
 		if err != nil {
 			respondWithError(c, 500, "mid nao conseguiu pegar o jwt do server")
 			return
 		}
 		c.Set("jwt", jwt.Token)
+
 		c.Next()
 	}
 }
