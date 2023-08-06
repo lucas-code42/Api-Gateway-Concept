@@ -4,6 +4,7 @@ import (
 	"Api-Gateway-lcs42/config"
 	"Api-Gateway-lcs42/models"
 	"Api-Gateway-lcs42/utils"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -13,9 +14,20 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetRequest(url, path, token string) (models.DtoResponse, error) {
+// TODO: Criar uma struct para o conjunto de dados (url, path, token, method string, payload *bytes.Buffer)
+func DoRequest(url, path, token, method string, payload *bytes.Buffer) (models.DtoResponse, error) {
+	switch method {
+	case "GET":
+		return getRequest(url, path, token)
+	case "POST":
+		return postRequest(url, path, token, payload)
+	default:
+		return models.DtoResponse{}, nil
+	}
+}
+
+func getRequest(url, path, token string) (models.DtoResponse, error) {
 	client := &http.Client{}
-	// * temp, the url should be complete at this point
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", url, path), nil)
 	if err != nil {
 		return models.DtoResponse{}, errors.New("error to mount new request")
@@ -49,6 +61,47 @@ func GetRequest(url, path, token string) (models.DtoResponse, error) {
 	buff = append(buff, data)
 	response := models.DtoResponse{
 		Message:    "Sucess",
+		Id:         uuid.NewString(),
+		Data:       buff,
+		StatusCode: 200,
+	}
+
+	return response, nil
+}
+
+func postRequest(url, path, token string, payload *bytes.Buffer) (models.DtoResponse, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", url, payload)
+	if err != nil {
+		fmt.Println(err)
+		return models.DtoResponse{}, err
+	}
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("token", token)
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return models.DtoResponse{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return models.DtoResponse{}, err
+	}
+
+	data, err := utils.ParseDtoResponse(body)
+	if err != nil {
+		return models.DtoResponse{}, nil
+	}
+
+	var buff []interface{}
+	buff = append(buff, data)
+	response := models.DtoResponse{
+		Message:    "msg",
 		Id:         uuid.NewString(),
 		Data:       buff,
 		StatusCode: 200,
