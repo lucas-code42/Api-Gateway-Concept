@@ -23,7 +23,7 @@ func ServerInterfacePost(c *gin.Context) {
 	clientData := new(bytes.Buffer)
 	json.NewEncoder(clientData).Encode(clientJson)
 
-	serverHost, err := PrepareRequest(c, POST)
+	serverHost, err := PrepareRequest(c, POST, c.Keys["jwt"])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
