@@ -12,7 +12,7 @@ import (
 func ServerInterfaceGet(c *gin.Context) {
 	start := time.Now()
 
-	serverHost, err := PrepareRequest(c, GET)
+	serverHost, err := PrepareRequest(c, GET, c.Keys["jwt"])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
