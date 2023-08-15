@@ -1,7 +1,8 @@
-package handlers
+package requests
 
 import (
 	"Api-Gateway-lcs42/config"
+	"Api-Gateway-lcs42/models"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -11,48 +12,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	GET    = 1
-	POST   = 2
-	PUT    = 3
-	DELETE = 4
-)
-
-type Host struct {
-	Url  string
-	Path string
-}
-
-type RequestHost struct {
-	Url     string
-	Path    string
-	Token   any // TODO: encontrar um jeito de ser string
-	Method  int
-	Payload *bytes.Buffer
-}
-
-func PrepareRequest(c *gin.Context, method int, token any) (RequestHost, error) {
+func PrepareRequest(c *gin.Context, method int) (models.RequestHost, error) {
 	var url string
 	var path string
 	var paylod *bytes.Buffer
+	var requestMethod string
 
 	s := c.Param("server")
 	switch s {
 	case "server1":
-		if method == GET {
+		if method == models.GET {
+			requestMethod = "GET"
 			url = config.SERVER1_DEFAULT_HOST
 			path = config.SERVER1_PATH
 			id := strings.Replace(c.Param("id"), "/", "", 1)
 			if id != "" {
 				path = fmt.Sprintf("%s?userId=%s", path, id)
 			} else {
-				return RequestHost{}, fmt.Errorf("err")
+				return models.RequestHost{}, fmt.Errorf("err")
 			}
-		} else if method == POST {
+		} else if method == models.POST {
+			requestMethod = "POST"
 			paylod = ClientBodyHandler(c)
+			// TODO: Montar url...
 		}
 	case "server2":
-		if method == GET {
+		if method == models.GET {
+			requestMethod = "GET"
 			url = config.SERVER2_DEFAULT_HOST
 			path = config.SERVER2_PATH
 			id, _ := strconv.Atoi(strings.Replace(c.Param("id"), "/", "", 1))
@@ -61,18 +47,20 @@ func PrepareRequest(c *gin.Context, method int, token any) (RequestHost, error) 
 			} else {
 				path = fmt.Sprintf("%s/all", path)
 			}
-		} else if method == POST {
+		} else if method == models.POST {
+			requestMethod = "POST"
 			paylod = ClientBodyHandler(c)
+			url = fmt.Sprintf("%s/%s", config.SERVER2_DEFAULT_HOST, config.SERVER2_PATH)
 		}
 	default:
-		return RequestHost{}, fmt.Errorf("err")
+		return models.RequestHost{}, fmt.Errorf("err")
 	}
 
-	return RequestHost{
+	return models.RequestHost{
 		Url:     url,
 		Path:    path,
-		Token:   token,
-		Method:  method,
+		Token:   fmt.Sprintf("%s", c.Keys["jwt"]),
+		Method:  requestMethod,
 		Payload: paylod,
 	}, nil
 }
