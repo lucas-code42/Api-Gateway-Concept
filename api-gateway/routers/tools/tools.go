@@ -14,13 +14,13 @@ import (
 	"github.com/google/uuid"
 )
 
-// TODO: Criar uma struct para o conjunto de dados (url, path, token, method string, payload *bytes.Buffer)
-func DoRequest(url, path, token, method string, payload *bytes.Buffer) (models.DtoResponse, error) {
-	switch method {
+func DoRequest(data models.RequestHost) (models.DtoResponse, error) {
+	switch data.Method {
 	case "GET":
-		return getRequest(url, path, token)
+		return getRequest(data.Url, data.Path, data.Token)
 	case "POST":
-		return postRequest(url, path, token, payload)
+		fmt.Println("****", data.Payload)
+		return postRequest(data.Url, data.Path, data.Token, data.Payload)
 	default:
 		return models.DtoResponse{}, nil
 	}
@@ -73,12 +73,12 @@ func postRequest(url, path, token string, payload *bytes.Buffer) (models.DtoResp
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("***", err)
 		return models.DtoResponse{}, err
 	}
 	req.Header.Add("accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("token", token)
+	req.Header.Add("Authorization", token)
 
 	res, err := client.Do(req)
 	if err != nil {
