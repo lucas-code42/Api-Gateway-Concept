@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PrepareRequest(c *gin.Context, method int) (models.RequestHost, error) {
+func PrepareRequest(c *gin.Context, method string) (models.RequestHost, error) {
 	var url string
 	var path string
 	var paylod *bytes.Buffer
@@ -21,7 +21,7 @@ func PrepareRequest(c *gin.Context, method int) (models.RequestHost, error) {
 	s := c.Param("server")
 	switch s {
 	case "server1":
-		if method == models.GET {
+		if method == "GET" {
 			requestMethod = "GET"
 			url = config.SERVER1_DEFAULT_HOST
 			path = config.SERVER1_PATH
@@ -31,13 +31,13 @@ func PrepareRequest(c *gin.Context, method int) (models.RequestHost, error) {
 			} else {
 				return models.RequestHost{}, fmt.Errorf("err")
 			}
-		} else if method == models.POST {
+		} else if method == "POST" {
 			requestMethod = "POST"
 			paylod = ClientBodyHandler(c)
 			// TODO: Montar url...
 		}
 	case "server2":
-		if method == models.GET {
+		if method == "GET" {
 			requestMethod = "GET"
 			url = config.SERVER2_DEFAULT_HOST
 			path = config.SERVER2_PATH
@@ -47,7 +47,7 @@ func PrepareRequest(c *gin.Context, method int) (models.RequestHost, error) {
 			} else {
 				path = fmt.Sprintf("%s/all", path)
 			}
-		} else if method == models.POST {
+		} else if method == "POST" {
 			requestMethod = "POST"
 			paylod = ClientBodyHandler(c)
 			url = fmt.Sprintf("%s/%s", config.SERVER2_DEFAULT_HOST, config.SERVER2_PATH)
