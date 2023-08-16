@@ -3,7 +3,6 @@ package handlers
 import (
 	"Api-Gateway-lcs42/routers/handlers/requests"
 	"Api-Gateway-lcs42/routers/httpHandler"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -13,8 +12,6 @@ import (
 // ServerInterfaceGet faz a requisição GET o server de destino
 func RequestInterface(c *gin.Context) {
 	start := time.Now()
-
-	fmt.Println(c.Request.Method)
 
 	serverHost, err := requests.PrepareRequest(c, c.Request.Method)
 	if err != nil {

@@ -14,16 +14,18 @@ import (
 	"github.com/google/uuid"
 )
 
+// TODO: DoRequest como interface
 func DoRequest(data models.RequestHost) (models.DtoResponse, error) {
-	switch data.Method {
-	case "GET":
-		return getRequest(data.Url, data.Path, data.Token)
-	case "POST":
-		fmt.Println("****", data.Payload)
-		return postRequest(data.Url, data.Path, data.Token, data.Payload)
-	default:
-		return models.DtoResponse{}, nil
-	}
+	// switch data.Method {
+	// case "GET":
+	// 	return getRequest(data.Url, data.Path, data.Token)
+	// case "POST":
+	// 	fmt.Println("****", data.Payload)
+	// 	return postRequest(data.Url, data.Path, data.Token, data.Payload)
+	// default:
+	// 	return models.DtoResponse{}, nil
+	// }
+	return request(data)
 }
 
 func getRequest(url, path, token string) (models.DtoResponse, error) {
@@ -148,6 +150,61 @@ func GetJwt(server string) (*models.AuthJwt, error) {
 	response, err := utils.ParseJwt(body)
 	if err != nil {
 		return &models.AuthJwt{}, errors.New("fail to parse jwt")
+	}
+
+	return response, nil
+}
+
+// ! Requisitções para o server1 (GET) tem algum bug...
+func request(request models.RequestHost) (models.DtoResponse, error) {
+	var p io.Reader
+	if request.Payload == nil {
+		p = nil
+	} else {
+		p = request.Payload
+	}
+
+	fmt.Println(request)
+
+	client := &http.Client{}
+	req, err := http.NewRequest(
+		request.Method,
+		fmt.Sprintf("%s/%s", request.Url, request.Path),
+		p,
+	)
+
+	if err != nil {
+		return models.DtoResponse{}, err
+	}
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", request.Token)
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return models.DtoResponse{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return models.DtoResponse{}, err
+	}
+
+	data, err := utils.ParseDtoResponse(body)
+	if err != nil {
+		return models.DtoResponse{}, nil
+	}
+
+	var buff []interface{}
+	buff = append(buff, data)
+	response := models.DtoResponse{
+		Message:    "msg",
+		Id:         uuid.NewString(),
+		Data:       buff,
+		StatusCode: 200,
 	}
 
 	return response, nil
