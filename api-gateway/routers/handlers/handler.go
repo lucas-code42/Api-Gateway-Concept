@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"Api-Gateway-lcs42/routers/handlers/requests"
-	"Api-Gateway-lcs42/routers/tools"
+	"Api-Gateway-lcs42/routers/httpHandler"
 	"fmt"
 	"net/http"
 	"time"
@@ -22,7 +22,7 @@ func RequestInterface(c *gin.Context) {
 		return
 	}
 
-	r, err := tools.DoRequest(serverHost)
+	r, err := httpHandler.DoRequest(serverHost)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return

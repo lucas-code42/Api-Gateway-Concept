@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"Api-Gateway-lcs42/config"
-	"Api-Gateway-lcs42/routers/tools"
+	"Api-Gateway-lcs42/routers/httpHandler"
 	"fmt"
 	"log"
 
@@ -30,7 +30,7 @@ func DummyMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		jwt, err := tools.GetJwt(s)
+		jwt, err := httpHandler.GetJwt(s)
 		if err != nil {
 			respondWithError(c, 500, "mid nao conseguiu pegar o jwt do server")
 			return
