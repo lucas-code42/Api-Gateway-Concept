@@ -45,7 +45,7 @@ func PrepareRequest(c *gin.Context, method string) (models.RequestHost, error) {
 			if id > 0 {
 				path = fmt.Sprintf("%s?book_id=%d", path, id)
 			} else {
-				path = fmt.Sprintf("%s/all", path)
+				path = "book/all"
 			}
 		} else if method == "POST" {
 			requestMethod = "POST"
@@ -55,8 +55,6 @@ func PrepareRequest(c *gin.Context, method string) (models.RequestHost, error) {
 	default:
 		return models.RequestHost{}, fmt.Errorf("err")
 	}
-
-	fmt.Println(url)
 
 	return models.RequestHost{
 		Url:     url,
