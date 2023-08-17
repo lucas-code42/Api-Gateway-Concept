@@ -19,12 +19,13 @@ func RequestInterface(c *gin.Context) {
 		return
 	}
 
-	r, err := httpHandler.DoRequest(serverHost)
+	var r httpHandler.DoRequest
+	res, err := r.Request(serverHost)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
 	}
 
-	r.ExecutionTime = time.Duration(time.Since(start).Milliseconds())
-	c.JSON(http.StatusOK, gin.H{"data": r})
+	res.ExecutionTime = time.Duration(time.Since(start).Milliseconds())
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
