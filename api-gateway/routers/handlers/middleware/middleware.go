@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"Api-Gateway-lcs42/config"
-	"Api-Gateway-lcs42/routers/tools"
+	"Api-Gateway-lcs42/routers/httpHandler"
 	"fmt"
 	"log"
 
@@ -17,6 +17,7 @@ func DummyMiddleware() gin.HandlerFunc {
 	if config.APIGATEWAY_KEY == "" {
 		log.Fatal("cannot read environment variable")
 	}
+
 	return func(c *gin.Context) {
 		authKey := c.Request.Header.Get("Authorization")
 		if authKey != config.APIGATEWAY_KEY {
@@ -30,7 +31,8 @@ func DummyMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		jwt, err := tools.GetJwt(s)
+		var r httpHandler.DoRequest
+		jwt, err := r.GetJwt(s)
 		if err != nil {
 			respondWithError(c, 500, "mid nao conseguiu pegar o jwt do server")
 			return
