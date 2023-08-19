@@ -33,22 +33,22 @@ func PrepareRequest(c *gin.Context, method string) (models.RequestHost, error) {
 			} else {
 				return models.RequestHost{}, fmt.Errorf("err")
 			}
-		} else if method == "POST" {
-			requestMethod = "POST"
+		} else if method == "POST" || method == "PUT" {
+			requestMethod = method
 			paylod = ClientBodyHandler(c)
 		}
 	case "server2":
 		url = config.SERVER2_DEFAULT_HOST
 		if method == "GET" {
-			requestMethod = "GET"
+			requestMethod = method
 			id, _ := strconv.Atoi(strings.Replace(c.Param("id"), "/", "", 1))
 			if id > 0 {
-				path = fmt.Sprintf("%s?book_id=%d", path, id)
+				path = fmt.Sprintf("book/?book_id=%d", id)
 			} else {
 				path = "book/all"
 			}
-		} else if method == "POST" {
-			requestMethod = "POST"
+		} else if method == "POST" || method == "PUT" {
+			requestMethod = method
 			paylod = ClientBodyHandler(c)
 			url = fmt.Sprintf("%s/%s", config.SERVER2_DEFAULT_HOST, config.SERVER2_PATH)
 		}
@@ -65,8 +65,6 @@ func PrepareRequest(c *gin.Context, method string) (models.RequestHost, error) {
 	}, nil
 }
 
-// ? Deve fazer parte do contexto?
-// ? Precisa fazer parte do contexto?
 func ClientBodyHandler(c *gin.Context) *bytes.Buffer {
 	var clientJson interface{}
 	if err := c.BindJSON(&clientJson); err != nil {

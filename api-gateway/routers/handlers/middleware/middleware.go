@@ -31,8 +31,7 @@ func DummyMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		var r httpHandler.DoRequest
-		jwt, err := r.GetJwt(s)
+		jwt, err := httpHandler.GetJwt(s)
 		if err != nil {
 			respondWithError(c, 500, "mid nao conseguiu pegar o jwt do server")
 			return
