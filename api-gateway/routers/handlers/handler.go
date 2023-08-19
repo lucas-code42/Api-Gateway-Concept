@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ServerInterfaceGet faz a requisição GET o server de destino
-func RequestInterface(c *gin.Context) {
+// RequestApiServers faz a requisição GET o server de destino
+func RequestApiServers(c *gin.Context) {
 	start := time.Now()
 
 	serverHost, err := requests.PrepareRequest(c, c.Request.Method)
@@ -19,8 +19,7 @@ func RequestInterface(c *gin.Context) {
 		return
 	}
 
-	var r httpHandler.DoRequest
-	res, err := r.Request(serverHost)
+	res, err := httpHandler.Request(serverHost)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
