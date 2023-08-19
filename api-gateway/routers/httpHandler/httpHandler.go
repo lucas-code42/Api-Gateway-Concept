@@ -13,11 +13,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type DoRequest interface {
-	Request(models.RequestHost) (models.DtoResponse, error)
-	GetJwt(server string) (*models.AuthJwt, error)
-}
-
 func GetJwt(server string) (*models.AuthJwt, error) {
 	var url string
 	var authKey string
